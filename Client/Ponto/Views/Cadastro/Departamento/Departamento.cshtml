@@ -1,0 +1,176 @@
+﻿@{
+    ViewData["Title"] = "Cadastro de Departamento";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+<head>
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Departamentos</h2>
+        <div class="row" style="width:100%; height:100%; margin:1%;">
+            <input style="width:8%; min-width:50px" type="number" class="form-control" id="IdConsulta" name="IdConsulta">
+            <input style="margin-left:1%; width:30%; min-width:50px;" type="text" class="form-control" id="DescricaoConsulta" name="DescricaoConsulta">
+            <button style="margin-left:10px; width:8%; min-width:80px" onclick="pesquisarDepartamento($('#IdConsulta').val(), $('#DescricaoConsulta').val())" class="btn btn-primary">Pesquisar</button>
+        </div>
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="consulta-tab" data-toggle="tab" href="#consulta" role="tab" aria-controls="consulta" aria-selected="true" onclick="consultaDepartamento()">Departamentos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="cadastro-tab" data-toggle="tab" href="#cadastro" role="tab" aria-controls="cadastro" aria-selected="false" onclick="novoDepartamento()">Cadastro</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="consulta" role="tabpanel" aria-labelledby="consulta-tab">
+                <table class="table mt-3" id="consulta">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Descrição</th>
+                            <th>Ativo</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var departamento in Model.Departamentos)
+                        {
+                            <tr ondblclick="editarDepartamento(@departamento.Id)">
+                                <td>@departamento.Id</td>
+                                <td>@departamento.Descricao</td>
+                                <td>@departamento.Ativo</td>
+                                <td>
+                                   <button class="btn btn-primary" onclick="editarDepartamento(@departamento.Id, '@departamento.Descricao', '@departamento.Ativo')">Editar</button>
+                                </td>
+                                <td>
+                                   <button class="btn btn-primary" onclick="deletarDepartamento(@departamento.Id)" style="background-color:red; border-color:red">Deletar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <button class="btn btn-success" onclick="novoDepartamento()">Novo</button>
+            </div>
+            <div class="tab-pane fade" id="cadastro" role="tabpanel" aria-labelledby="cadastro-tab">
+                <form id="cadastroForm" method="post" onsubmit="SalvarDepartamento(); return false;">
+                    <div class="container" style="height: 100%;
+                          margin: 0;">
+                        <div class="container2" style=" align-content:center; height:100%; width:80%;">
+                            <div class="container-fluid" style="height:100%; margin:0;">
+                                <h1 class="display-4" style="margin:2%;font-size:150%;">Cadastro de Departamento</h1>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ID">ID</label>
+                                <input style="margin-bottom:3%; width:10%; min-width:50px" type="number" class="form-control" id="ID" name="ID"  disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="Descricao">Descrição</label>
+                                <input style="width:50%; min-width:150px; text-transform: uppercase;" type="text" class="form-control" id="Descricao" name="Descricao" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="Ativo">Ativo</label>
+                                <input style="margin-bottom:3%; width:10%; min-width:50px; text-transform: uppercase;" type="text" class="form-control" id="Ativo" name="Ativo">
+                            </div>
+                            <button style="margin-top:3%" type="submit" class="btn btn-primary">Salvar</button>
+                            <button style="margin-top:3%; background-color:red; border-color:red" onclick="consultaDepartamento()" class="btn btn-primary">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function consultaDepartamento() {
+            $('#ID').val(0);
+            $('#Descricao').val('');
+            $('#Ativo').val('S');
+            $('#consulta-tab').tab('show');
+        }
+
+
+        function pesquisarDepartamento(id, descricao) {
+            if (!id && !descricao) {
+                window.location.href = "/api/Departamento/Departamento/Departamento";
+            } else {
+                window.location.href = `/api/Departamento/Departamento/Pesquisar/${id ? id : 0}/${descricao ? encodeURIComponent(descricao) : ''}`;
+            }
+        }
+
+        function novoDepartamento() {
+            $('#ID').val(0);
+            $('#Descricao').val('');
+            $('#Ativo').val('S');
+            $('#cadastro-tab').tab('show');
+        }
+        function editarDepartamento(id,descricao,ativo) {
+            $('#ID').val(id);
+            $('#Descricao').val(descricao);
+            $('#Ativo').val(ativo);
+            $('#cadastro-tab').tab('show');
+
+        }
+        function deletarDepartamento(id) {
+            var confirmar = confirm('Você tem certeza de que deseja deletar este departamento?');
+            if (confirmar) {
+                $.ajax({
+                    url: '/api/Departamento/Departamento/Delete/' + id,
+                    type: 'DELETE',
+                    success: function (result) {
+                        alert('Departamento deletado com sucesso!');
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Erro ao deletar o departamento: ' + error);
+                    }
+                });
+            }
+        }
+
+        function SalvarDepartamento() {
+            var id = $('#ID').val();
+            var descricao = $('#Descricao').val().toUpperCase();
+            var ativo = $('#Ativo').val().toUpperCase();
+
+            var departamento = {
+                ID: id,
+                Descricao: descricao,
+                Ativo: ativo
+            };
+
+            var url, type;
+
+            if (id == 0) {
+                url = '/api/Departamento/Departamento/Create';
+                type = 'POST';
+            } else {
+                url = '/api/Departamento/Departamento/Update/' + id;
+                type = 'PUT';
+            }
+
+            $.ajax({
+                url: url,
+                type: type,
+                contentType: 'application/json',
+                data: JSON.stringify(departamento),
+                success: function (result) {
+                    alert('Departamento salvo com sucesso!');
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    alert('Erro ao salvar o departamento: ' + error);
+                }
+            });
+        }
+
+    </script>
+</body>

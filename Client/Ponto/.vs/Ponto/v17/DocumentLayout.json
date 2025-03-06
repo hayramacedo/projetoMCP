@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\views\\folha\\folha.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:views\\folha\\folha.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\controllers\\folhacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:controllers\\folhacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAACIAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-05T20:54:05.509Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FolhaController.cs",
+              "DocumentMoniker": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Controllers\\FolhaController.cs",
+              "RelativeDocumentMoniker": "Controllers\\FolhaController.cs",
+              "ToolTip": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Controllers\\FolhaController.cs",
+              "RelativeToolTip": "Controllers\\FolhaController.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAA8AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-02T23:14:50.194Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Folha.cshtml",
+              "DocumentMoniker": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Views\\Folha\\Folha.cshtml",
+              "RelativeDocumentMoniker": "Views\\Folha\\Folha.cshtml",
+              "ToolTip": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Views\\Folha\\Folha.cshtml",
+              "RelativeToolTip": "Views\\Folha\\Folha.cshtml",
+              "ViewState": "AgIAAA8BAAAAAAAAAAAAABMBAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-02T22:53:54.819Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

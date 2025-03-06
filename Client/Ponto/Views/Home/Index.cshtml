@@ -1,0 +1,169 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var horarioAtualInicial = DateTime.Now.ToString("HH:mm:ss");
+
+}
+
+<script>
+    function atualizarHorario() {
+        var agora = new Date();
+        var horas = String(agora.getHours()).padStart(2, '0');
+        var minutos = String(agora.getMinutes()).padStart(2, '0');
+        var segundos = String(agora.getSeconds()).padStart(2, '0');
+        var horarioAtual = horas + ':' + minutos + ':' + segundos;
+        document.getElementById('horario').textContent = horarioAtual;
+    }
+
+    setInterval(atualizarHorario, 1000); 
+</script>
+
+<head>
+    <style>
+        .centralizado {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .button-grey {
+            background-color: darkgrey;
+        }
+
+        .button-grey:hover  {
+            background-color: grey;
+        }
+    </style>
+</head>
+<body onload="atualizarHorario()">
+    <div class="container" style="height: 100%;
+                margin: 0;
+                display: grid;
+                place-items: center;">
+        <div class="container2" style=" align-content:center; height:100%; width:100%;place-items: center">
+            <h1 class="display-4" style="margin-bottom:2%;font-size:150%; text-align:center">MCP - Meu Cartão de Ponto Eletrônico</h1>
+
+        @if (ViewBag.Username != "Administrador")
+        {
+            <h1 style="margin-bottom:4%;font-size:110%">Horário Atual: <span id="horario">@horarioAtualInicial</span></h1>
+            <div class="row" style="width:60%; height:100%; max-width:600px; min-width: 80px; margin-bottom:1%; justify-content: center">
+                <button class="button button1 @((ViewBag.Entrada != "00:00:00") ? "button-grey" : "")" style="color:antiquewhite; font-size:85%" onclick="RegistrarPonto('@ViewBag.Entrada', '', '', '')">
+                    <div class="col" style="display: flex; flex-direction: column; align-items: center;">
+                        <i class="material-icons" style=" font-size:150%; color:antiquewhite">login</i>
+                        <h2 style="font-size:100%; margin: 0;">Entrada</h2>
+                        <h1 style="font-size:200%; margin-top: 4%;">@(ViewBag.Entrada.Substring(0, 5))</h1>
+                    </div>
+                </button>
+                    <button class="button button2 @((ViewBag.Pausa != "00:00:00") ? "button-grey" : "")" style="color:antiquewhite; font-size:85%" onclick="RegistrarPonto('', '@ViewBag.Pausa', '', '')">
+                    <div class="col" style="display: flex; flex-direction: column; align-items: center;">
+                        <i class="material-icons" style=" font-size:150%; color:antiquewhite">hourglass_top</i>
+                        <h2 style="font-size:100%; margin: 0;">Pausa</h2>
+                        <h1 style="font-size:200%; margin-top: 4%;">@(ViewBag.Pausa.Substring(0, 5))</h1>
+                    </div>
+                </button>
+            </div>
+
+            <div class="row" style="width:60%; height:100%; max-width:600px; min-width: 80px; margin-bottom:1%; justify-content: center">
+                <button class="button button3 @((ViewBag.Retorno != "00:00:00") ? "button-grey" : "")" style="color:antiquewhite; font-size:85%" onclick="RegistrarPonto('', '', '@ViewBag.Retorno', '')">
+                    <div class="col" style="display: flex; flex-direction: column; align-items: center;">
+                        <i class="material-icons" style=" font-size:150%; color:antiquewhite">hourglass_bottom</i>
+                        <h2 style="font-size:100%; margin: 0;">Retorno</h2>
+                        <h1 style="font-size:200%; margin-top: 4%;">@(ViewBag.Retorno.Substring(0, 5))</h1>
+                    </div>
+                </button>            
+                <button class="button button4 @((ViewBag.Saida != "00:00:00") ? "button-grey" : "")" style="color:antiquewhite; font-size:85%" onclick="RegistrarPonto('', '', '', '@ViewBag.Saida')">
+                    <div class="col" style="display: flex; flex-direction: column; align-items: center;">
+                        <i class="material-icons" style=" font-size:150%; color:antiquewhite">logout</i>
+                        <h2 style="font-size:100%; margin: 0;">Saída</h2>
+                        <h1 style="font-size:200%; margin-top: 4%;">@(ViewBag.Saida.Substring(0, 5))</h1>
+                    </div>
+                </button>
+            </div>
+        }else
+        {
+            <div class="container centralizado">
+                <h1 style="margin-bottom:10%;font-size:110%">HOME - ADMINISTRADOR</h1>
+                <img src="~/assets/logoPreto.png" alt="Logo" style="width: 50%; height: auto; margin-bottom: 4%;">
+            </div>
+        }
+
+        </div>
+    </div>
+    <script>
+        function RegistrarPonto(entrada,pausa,retorno,saida) { 
+            var ponto = '';
+
+            if (entrada) {
+                ponto = 'a Entrada';
+            } else if (pausa) {
+                ponto = 'a Pausa';
+            } else if (retorno) {
+                ponto = 'o Retorno';
+            } else if (saida) {
+                ponto = 'a Saída';
+            } else {
+                return;
+            }
+
+            var confirmar = confirm('Deseja registrar ' + ponto + '?');
+            if (confirmar) 
+            {
+                 var getMidnightOffset = function () {
+                     return moment.tz('America/Sao_Paulo').startOf('day').format();
+                 };
+
+
+                var convertStringData = function (timeString) {
+                    var [hours, minutes, seconds] = timeString.split(':');
+                    var now = new Date();
+                    now.setHours(hours);
+                    now.setMinutes(minutes);
+                    now.setSeconds(seconds);
+                    now.setMilliseconds(0);
+                    return moment.tz(now, 'America/Sao_Paulo').toISOString();
+                }
+
+
+                var getBrasiliaTimeOffset = function () {
+                    return moment.tz('America/Sao_Paulo').toISOString();
+                };
+
+                var ViewBag = {
+                    Entrada: '@ViewBag.Entrada',
+                    Pausa: '@ViewBag.Pausa',
+                    Retorno: '@ViewBag.Retorno',
+                    Saida: '@ViewBag.Saida'
+                }
+
+                var Folha = {
+                    Entrada: entrada ? getBrasiliaTimeOffset() : convertStringData(ViewBag.Entrada),
+                    Pausa: pausa ? getBrasiliaTimeOffset() : convertStringData(ViewBag.Pausa),
+                    Retorno: retorno ? getBrasiliaTimeOffset() : convertStringData(ViewBag.Retorno),
+                    Saida: saida ? getBrasiliaTimeOffset() : convertStringData(ViewBag.Saida)
+                };
+
+                //alert('Valor:' + JSON.stringify(Folha));
+
+                var url = '/api/RegistrarPonto';
+                var type = 'PUT';
+
+                $.ajax({
+                    url: url,
+                    type: type,
+                    contentType: 'application/json',
+                    data: JSON.stringify(Folha),
+                    success: function (result) {
+                        window.location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+
+
+

@@ -1,0 +1,189 @@
+﻿@{
+    ViewData["Title"] = "Cadastro de Empresa";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+<head>
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Empresas</h2>
+        <div class="row" style="width:100%; height:100%; margin:1%;">
+            <input style="width:8%; min-width:50px" type="number" class="form-control" id="IdConsulta" name="IdConsulta">
+            <input style="margin-left:1%; width:30%; min-width:50px;" type="text" class="form-control" id="DescricaoConsulta" name="DescricaoConsulta">
+            <button style="margin-left:10px; width:8%; min-width:80px" onclick="pesquisarEmpresa($('#IdConsulta').val(), $('#DescricaoConsulta').val())" class="btn btn-primary">Pesquisar</button>
+        </div>
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="consulta-tab" data-toggle="tab" href="#consulta" role="tab" aria-controls="consulta" aria-selected="true" onclick="consultaEmpresa()">Empresas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="cadastro-tab" data-toggle="tab" href="#cadastro" role="tab" aria-controls="cadastro" aria-selected="false" onclick="novoEmpresa()">Cadastro</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="consulta" role="tabpanel" aria-labelledby="consulta-tab">
+                <table class="table mt-3" id="consulta">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Razão Social</th>
+                            <th>Fantasia</th>
+                            <th>Cnpj</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var empresa in Model.Empresas)
+                        {
+                            <tr ondblclick="editarEmpresa(@empresa.Id)">
+                                <td>@empresa.Id</td>
+                                <td>@empresa.Razao_Social</td>
+                                <td>@empresa.Fantasia</td>
+                                <td>@empresa.Cnpj</td>
+                                <td>
+                                    <button class="btn btn-primary" onclick="editarEmpresa(@empresa.Id, '@empresa.Razao_Social', '@empresa.Fantasia', '@empresa.Cnpj')">Editar</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" onclick="deletarEmpresa(@empresa.Id)" style="background-color:red; border-color:red">Deletar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <button class="btn btn-success" onclick="novoEmpresa()">Novo</button>
+            </div>
+            <div class="tab-pane fade" id="cadastro" role="tabpanel" aria-labelledby="cadastro-tab">
+                <form id="cadastroForm" method="post" onsubmit="SalvarEmpresa(); return false;">
+                    <div class="container" style="height: 100%;
+                          margin: 0;">
+                        <div class="container2" style=" align-content:center; height:100%; width:80%;">
+                            <div class="container-fluid" style="height:100%; margin:0;">
+                                <h1 class="display-4" style="margin:2%;font-size:150%;">Cadastro de Empresa</h1>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ID">ID</label>
+                                <input style="margin-bottom:3%; width:10%; min-width:50px" type="number" class="form-control" id="ID" name="ID" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="Razao_Social">Razão Social</label>
+                                <input style="width:50%; min-width:150px;" type="text" class="form-control" id="Razao_Social" name="Razao_Social" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="Fantasia">Fantasia</label>
+                                <input style="width:30%; min-width:100px;" type="text" class="form-control" id="Fantasia" name="Fantasia" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="Cnpj">Cnpj</label>
+                                <input style="width:20%; min-width:80px;" type="text" class="form-control" id="Cnpj" name="Cnpj" required>
+                            </div>
+                            
+                            <button style="margin-top:3%" type="submit" class="btn btn-primary">Salvar</button>
+                            <button style="margin-top:3%; background-color:red; border-color:red" onclick="consultaEmpresa()" class="btn btn-primary">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function consultaEmpresa() {
+            $('#ID').val(0);
+            $('#Razao_Social').val('');
+            $('#Fantasia').val('');
+            $('#Cnpj').val('');
+            $('#consulta-tab').tab('show');
+        }
+
+
+        function pesquisarEmpresa(id, razao) {
+            if (!id && !razao) {
+                window.location.href = "/api/Empresa/Empresa/Empresa";
+            } else {
+                window.location.href = `/api/Empresa/Empresa/Pesquisar/${id ? id : 0}/${razao ? encodeURIComponent(razao) : ''}`;
+            }
+        }
+
+        function novoEmpresa() {
+            $('#ID').val(0);
+            $('#Razao_Social').val('');
+            $('#Fantasia').val('');
+            $('#Cnpj').val('');
+            $('#cadastro-tab').tab('show');
+        }
+        function editarEmpresa(id, razao, fantasia, cnpj) {
+            $('#ID').val(id);
+            $('#Razao_Social').val(razao);
+            $('#Fantasia').val(fantasia);
+            $('#Cnpj').val(cnpj);
+            $('#cadastro-tab').tab('show');
+
+        }
+        function deletarEmpresa(id) {
+            var confirmar = confirm('Você tem certeza de que deseja deletar esta empresa?');
+            if (confirmar) {
+                $.ajax({
+                    url: '/api/Empresa/Empresa/Delete/' + id,
+                    type: 'DELETE',
+                    success: function (result) {
+                        alert('Empresa deletada com sucesso!');
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Erro ao deletar a empresa: ' + error);
+                    }
+                });
+            }
+        }
+
+        function SalvarEmpresa() {
+            var id = $('#ID').val();
+            var razao = $('#Razao_Social').val();
+            var fantasia = $('#Fantasia').val();
+            var cnpj = $('#Cnpj').val();
+            
+
+            var empresa = {
+                ID: id,
+                Razao_Social: razao,
+                Fantasia: fantasia,
+                Cnpj: cnpj
+            };
+
+            var url, type;
+
+            if (id == 0) {
+                url = '/api/Empresa/Empresa/Create';
+                type = 'POST';
+            } else {
+                url = '/api/Empresa/Empresa/Update/' + id;
+                type = 'PUT';
+            }
+
+            $.ajax({
+                url: url,
+                type: type,
+                contentType: 'application/json',
+                data: JSON.stringify(empresa),
+                success: function (result) {
+                    alert('Empresa salva com sucesso!');
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    alert('Erro ao salvar a empresa: ' + error);
+                }
+            });
+        }
+
+    </script>
+</body>

@@ -1,0 +1,92 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+.panel-body {
+    padding: 0.2%;
+}
+
+/*.button {
+    background-color: #04AA6D;*/ /* Green */
+    /*border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}*/
+
+.button {
+    border: 1px solid #ddd;
+    border-radius: 1%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    width: 49%;
+    text-align: center;
+    margin-right: 1%;
+}
+
+.button1 {
+    background-color: #29E7F4;
+    color: black;
+    border: 2px solid #07a8b3;
+}
+.button1:hover {
+    background-color: #07a8b3;
+    color: white;
+}
+.button2 {
+    background-color: #0B0F57;
+    color: black;
+    border: 2px solid #020421;
+}
+
+.button2:hover {
+    background-color: #020421;
+    color: white;
+}
+.button3 {
+    background-color: #EB2F86;
+    color: black;
+    border: 2px solid #870f47;
+}
+
+.button3:hover {
+    background-color: #870f47;
+    color: white;
+}
+.button4 {
+    background-color: #c53dff;
+    color: black;
+    border: 2px solid #7e19a8;
+}
+
+.button4:hover {
+    background-color: #7e19a8;
+    color: white;
+}
+
+
+

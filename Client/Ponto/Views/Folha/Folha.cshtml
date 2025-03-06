@@ -1,0 +1,483 @@
+﻿@{
+    ViewData["Title"] = "Folha de Ponto";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+<h1 class="display-4" style="margin-bottom:2%;font-size:180%; text-align:center">@ViewData["Title"]</h1>
+
+<head>
+    <title>@ViewData["Title"]</title>
+    <style>
+        .panel {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 16px;
+            margin-bottom: 16px;
+            background-color: aliceblue;
+        }
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto; 
+        }
+        .table-container2 {
+            max-height: 150px; 
+            overflow-y: auto; 
+        }
+        .bg-lightblue {
+            background-color: azure;
+        }
+        .bg-lilac {
+            background-color: antiquewhite;
+        }
+        .nav-tabs .nav-item {
+            display: none; /* Esconde todas as abas */
+        }
+        .text-blue {
+            color: blue;
+        }
+        .text-green {
+            color: forestgreen;
+        }
+         .text-red {
+            color: red;
+        }
+
+        .text-darkslategray {
+            color: darkslategray;
+        }
+
+        .centralizado {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .borda {
+            border: 1px solid lightgrey;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: lightgrey;
+        }
+
+        .blue-row {
+            background-color: aqua;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <div class="row" style="width:100%; height:100%; margin:1%;">
+            <div class="col-auto">
+                <label for="IdConsulta" class="col-form-label">Consultar:</label>
+            </div>
+            <input style="width:8%; min-width:50px" type="number" class="form-control" id="IdConsulta" name="IdConsulta">
+            @* <input style="margin-left:1%; width:8%; min-width:50px;" type="text" class="form-control" id="IdFuncConsulta" name="IdFuncConsulta"> *@
+            <input style="margin-left:1%; width:15%; min-width:50px;" type="date" class="form-control" id="DataInicio" name="DataInicio" value="@ViewBag.DataInicio">
+            <input style="margin-left:1%; width:15%; min-width:50px;" type="date" class="form-control" id="DataFim" name="DataFim" value="@ViewBag.DataFim">
+            <button style="margin-left:10px; width:8%; min-width:80px" onclick="pesquisarFolha($('#IdConsulta').val(), 0, $('#DataInicio').val(), $('#DataFim').val())" class="btn btn-primary">Pesquisar</button>
+        </div>
+        <div class="panel">
+            @* <h4 class="text-center">Tabela de Folhas</h4> *@
+            <div class="table-container">
+                <table class="table mt-3" id="consultaTable">
+                    <thead>
+                        <tr> 
+                            <th></th>
+                            <th class="text-center">ID</th>
+                            <th class="text-center">Data da Folha</th>
+                            <th class="text-center">Entrada</th>
+                            <th class="text-center">Pausa</th>
+                            <th class="text-center">Retorno</th>
+                            <th class="text-center">Saída</th>
+                            <th class="text-center">Situação Jornada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var folha in Model.Folhas)
+                        {
+                            string rowClass = folha.St_Jornada == "Trabalho" ? "bg-lightblue" : folha.St_Jornada == "Folga" ? "bg-lilac" : "";
+                            rowClass += (folha.Data_Folha.Date == DateTime.Today) ? " blue-row" : "";
+
+                            <tr ondblclick="pesquisarFolha(@folha.Id, 0, '', '')" class="@rowClass">
+                                <td>@folha.Data_Folha.ToString("dddd")</td>
+                                <td class="text-center">@folha.Id</td>
+                                <td class="text-center">@folha.Data_Folha.ToString("dd/MM/yyyy")</td>
+                                <td class="text-center">@folha.Entrada.ToString("HH:mm")</td>
+                                <td class="text-center">@folha.Pausa.ToString("HH:mm")</td>
+                                <td class="text-center">@folha.Retorno.ToString("HH:mm")</td>
+                                <td class="text-center">@folha.Saida.ToString("HH:mm")</td>
+                                <td class="text-center">
+                                    <span class="@((@folha.St_Jornada == "Trabalho") ? "text-darkslategray" : (@folha.St_Jornada == "Folga") ? "text-green" : (@folha.St_Jornada == "Dispensa") ? "text-red" : "")">
+                                        <strong>@folha.St_Jornada</strong>
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel">
+            @* <h4 class="text-center">Banco de Horas</h4>    *@       
+            <div class="row">
+                <div class="col-md-6" style="padding: 2px; height:100%;  display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px;">
+                    <h4 class="text-center" style="margin-bottom:2%" >Banco de Horas</h4>
+                    <div class="panel" style="width: 90%; height: 100%; border-radius: 15px; background-color: blanchedalmond; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px;">
+                        <div class="row">
+                            <div class="col-auto">
+                              <label style="font-size: large; font-weight: bold;">Saldo total no Banco de Horas:</label>
+                           </div>
+                           <div class="col-auto">
+                              <label style="color: red; font-size: 150%; font-weight: bold;">@ViewBag.BancoSaldo</label>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" style="padding: 2px; height:100%;">
+                    <h4 class="text-center" style="margin-bottom:2%">Solicitação de Ajuste</h4>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="consulta-tab" data-toggle="tab" href="#consulta" role="tab" aria-controls="consulta" aria-selected="true" onclick="consultaAjuste()">Consulta</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="cadastro-tab" data-toggle="tab" href="#cadastro" role="tab" aria-controls="cadastro" aria-selected="false" onclick="novoAjuste()">Solicitar</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="consulta" role="tabpanel" aria-labelledby="consulta-tab">
+                            <div class="row" style="width:100%; height:100%; margin:1%;">
+                                <div class="col-auto">
+                                    <label for="IdFolha" class="col-form-label">ID Ajuste</label>
+                                </div>
+                                <input style="width:12%; min-width:50px" type="number" class="form-control" id="IdAjuste" name="IdAjuste">
+                                <input style="margin-left:10px; width:12%; min-width:50px" type="number" class="form-control" id="IdFolhaConsulta" name="IdFolhaConsulta" placeholder="Id Folha">
+                                @* <input style="margin-left:10px; width:22%; min-width:50px" type="date" class="form-control" id="DataFolhaConsulta" name="DataFolhaConsulta" value="1990-01-01" disabled> *@
+                                <button style="margin-left:10px; width:15%; min-width:80px" onclick="pesquisarSolicitacao($('#IdAjuste').val(),$('#IdFolhaConsulta').val())" class="btn btn-primary">Pesquisar</button>
+                            </div>
+                            <div class="row" style="width:100%; height:100%; margin:1%">
+                                <div class="table-container2">
+                                    <table class="table mt-3" id="consultaTable2">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Id Ajuste</th>
+                                                <th class="text-center">Id Folha</th>
+                                                <th class="text-center">Entrada</th>
+                                                <th class="text-center">Pausa</th>
+                                                <th class="text-center">Retorno</th>
+                                                <th class="text-center">Saída</th>
+                                                <th class="text-center">Situação</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var sol in Model.Solicitacoes)
+                                            {
+                                                <tr ondblclick="editarSolicitacao(@sol.Id,@sol.Id_Folha, '@sol.Data_Folha.ToString("dd/MM/yyyy")','@sol.Entrada','@sol.Pausa','@sol.Retorno','@sol.Saida','@sol.St_Ajuste','@sol.Ds_Causa','@sol.Replica_Adm')">
+                                                    <td class="text-center">@sol.Id</td>
+                                                    <td class="text-center">@sol.Id_Folha</td>
+                                                    <td class="text-center">@sol.Entrada.ToString("HH:mm")</td>
+                                                    <td class="text-center">@sol.Pausa.ToString("HH:mm")</td>
+                                                    <td class="text-center">@sol.Retorno.ToString("HH:mm")</td>
+                                                    <td class="text-center">@sol.Saida.ToString("HH:mm")</td>
+                                                    <td class="text-center">@sol.St_Ajuste</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button class="btn btn-success" style="width:16%" onclick="novoAjuste()">Novo</button>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="cadastro" role="tabpanel" aria-labelledby="cadastro-tab">
+                            <div class="row" style="width:100%; height:100%; margin:1%;">
+                                <div class="col-auto">
+                                    <label for="IdFolha" class="col-form-label">ID Folha</label>
+                                </div>
+                                <input style="width:12%; min-width:50px;" type="number" class="form-control" id="IdFolha" name="IdFolha">
+                                <input style="margin-left:10px; width:22%; min-width:80px" type="date" class="form-control" id="Data_Folha" name="Data_Folha" value="1990-01-01" disabled>
+                                <input style="margin-left:10px; width:22%; min-width:80px" type="text" class="form-control" id="St_Ajuste" name="St_Ajuste" value="PENDENTE" disabled>
+                                <button id="pesquisarBtn" style="margin-left:10px; width: 15%; min-width: 80px;" class="btn btn-primary" onclick="pesquisarFolha2($('#IdFolha').val())">Pesquisar</button>
+                            </div>
+                            <div class="container" style="width: 100%; height: 100%; margin: 1%;">
+                                <div class="row" style="height: 100%;">
+                                    <div class="col-md-6" style="padding: 2px; height: 100%;">
+                                        <div class="row align-items-center" style="width: 100%; margin: 1%;">
+                                            <div class="col-auto">
+                                                <label for="Entrada" class="col-form-label">Entrada</label>
+                                            </div>
+                                            <div class="col">
+                                                <input style="width: 100%; min-width: 50px;" type="time" class="form-control" id="Entrada" name="Entrada" value="00:00">
+                                            </div>
+                                        </div>
+                                        <div class="row align-items-center" style="width: 100%; margin: 1%;">
+                                            <div class="col-auto">
+                                                <label for="Pausa" class="col-form-label">Pausa</label>
+                                            </div>
+                                            <div class="col">
+                                                <input style="width: 100%; min-width: 50px;" type="time" class="form-control" id="Pausa" name="Pausa" value="00:00">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" style="padding: 2px; height: 100%;">
+                                        <div class="row align-items-center" style="width: 100%; margin: 1%;">
+                                            <div class="col-auto">
+                                                <label for="Retorno" class="col-form-label">Retorno</label>
+                                            </div>
+                                            <div class="col">
+                                                <input style="width: 100%; min-width: 50px;" type="time" class="form-control" id="Retorno" name="Retorno" value="00:00">
+                                            </div>
+                                        </div>
+                                        <div class="row align-items-center" style="width: 100%; margin: 1%;">
+                                            <div class="col-auto">
+                                                <label for="Saida" class="col-form-label">Saída</label>
+                                            </div>
+                                            <div class="col">
+                                                <input style="width: 100%; min-width: 50px;" type="time" class="form-control" id="Saida" name="Saida" value="00:00">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label for="Ds_Causa" class="col-form-label" style="margin-left:1%; margin-top:2%">Causa da Solicitação</label>
+                                <textarea style="margin-top:1%; margin-left:1%; width:99%; height:50%; min-width:50px;" type="text" class="form-control" id="Ds_Causa" name="Ds_Causa" placeholder="Descreva a causa da Solicitação"></textarea>
+                                <label for="Replica_Adm" class="col-form-label" style="margin-left:1%; margin-top:2%">Réplica do Administrador</label>
+                                <textarea style="margin-left:1%; width:99%; height:50%; min-width:50px;" type="text" class="form-control" id="Replica_Adm" name="Replica_Adm" disabled></textarea>
+                                <div class="row" style="width: 100%; margin: 1%;">
+                                   <button id="enviarBtn" style="width: 16%; min-width: 80px;" class="btn btn-primary" onclick="salvarSolicitacao()">Enviar</button>
+                                   <button style="margin-left:1%; width: 16%; background-color: red; border-color: red;" onclick="consultaAjuste()" class="btn btn-primary">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function pesquisarFolha(id, id_funcionario, data_inicio, data_fim) {
+            var id_func = "@ViewBag.Id_Funcionario";
+          
+            window.location.href = `/api/Folha/Pesquisar/${id ? id : 0}/${id_func ? id_func : 0}/${data_inicio ? encodeURIComponent(data_inicio) : 'null'}/${data_fim ? encodeURIComponent(data_fim) : 'null'}`;    
+            //pesquisarSolicitacao();
+        }
+        function pesquisarFolha2(id) {
+            var id_func = "@ViewBag.Id_Funcionario";
+
+            $.ajax({
+                url: '/api/Folha/Pesquisar2/' + id + "/" + id_func + "/null/null",
+                type: 'GET',
+                success: function (resultado) { 
+                    var folha = resultado[0];
+                    var folha2 = JSON.stringify(folha);
+                    var jsonObject = JSON.parse(folha2);
+
+                    //alert("Resultado: " + JSON.stringify(folha));                    
+                    //alert("Data folha: " + jsonObject.data_Folha);
+                    //alert("Entrada: " + jsonObject.entrada);
+
+                    var data_folha = jsonObject.data_Folha.split("T")[0];
+                    var entrada = jsonObject.entrada.split("T")[1].split("-")[0].slice(0, 5);
+                    var pausa = jsonObject.pausa.split("T")[1].split("-")[0].slice(0, 5);;
+                    var retorno = jsonObject.retorno.split("T")[1].split("-")[0].slice(0, 5);;
+                    var saida = jsonObject.saida.split("T")[1].split("-")[0].slice(0, 5);;
+                       
+                    $('#Data_Folha').val(data_folha);
+                    $('#Entrada').val(entrada);
+                    $('#Pausa').val(pausa);
+                    $('#Retorno').val(retorno);
+                    $('#Saida').val(saida);
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("Erro ao buscar folha: ", error);
+                }
+            });       
+        }
+
+        function extrairHora(dataHora) {
+            if (!dataHora) {
+                return 'N/A';
+            }
+            var horaMinutos = dataHora.match(/(\d{2}:\d{2}):\d{2}/);
+
+            return horaMinutos ? horaMinutos[1] : 'N/A';
+        }
+
+        function convertStringToDateTimeOffset(dateTimeString) {
+            const dateTimeUTC = moment.parseZone(dateTimeString).utc();
+            const dateTime = dateTimeUTC.tz('America/Sao_Paulo');
+            return dateTime.format("YYYY-MM-DDTHH:mm:ssZ");
+        }
+
+        function converterData(data) {
+            const partes = data.split('/');
+            return `${partes[2]}-${partes[1]}-${partes[0]}`;
+        }
+
+        function converterDataBrasil(data) {
+            const partes = data.split('T')[0].split('-');
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        function salvarSolicitacao() {
+            
+            var idfolha = $('#IdFolha').val();
+            //alert("IdFolha:" + idfolha);
+            var idfuncionario = '@ViewBag.Id_Funcionario';
+            var data_folha = $('#Data_Folha').val();
+            var entrada = data_folha + 'T' + $('#Entrada').val() + ':00-03:00';
+            var pausa = data_folha + 'T' + $('#Pausa').val() + ':00-03:00';
+            var retorno = data_folha + 'T' + $('#Retorno').val() + ':00-03:00';
+            var saida = data_folha + 'T' + $('#Saida').val() + ':00-03:00';
+            var ds_causa = $('#Ds_Causa').val();
+            var st_ajuste = $('#St_Ajuste').val();
+            var replica_adm = $('#Replica_Adm').val();
+
+            var folhaAjuste = {
+                Id_Folha: idfolha,
+                Id_Funcionario: idfuncionario,
+                Data_Folha: data_folha,
+                Entrada: convertStringToDateTimeOffset(entrada),
+                Pausa: convertStringToDateTimeOffset(pausa),
+                Retorno: convertStringToDateTimeOffset(retorno),
+                Saida: convertStringToDateTimeOffset(saida),
+                Ds_Causa: ds_causa,
+                St_Ajuste: st_ajuste,
+                Replica_Adm: replica_adm
+            };
+
+            //alert("Folha: " + JSON.stringify(folha));
+
+            var url = '/api/FolhaAjuste/Create';
+            var type = 'POST';
+
+            $.ajax({
+                url: url,
+                type: type,
+                contentType: 'application/json',
+                data: JSON.stringify(folhaAjuste),
+                success: function (result) {
+                    alert('Registro atualizado com sucesso!');
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    alert('Erro ao salvar o folha: ' + error);
+                }
+            });
+        }
+
+        function formatarData(data) {
+            return data.split('T')[0];
+        }
+
+        function editarSolicitacao(id, id_folha, data_folha ,entrada, pausa, retorno, saida, st_ajuste, ds_causa, replica_adm) {
+            $('#cadastro-tab').tab('show');
+
+            //alert("Valor data_folha: " + data_folha);
+
+            $('#IdFolha').val(id_folha);
+            $('#Data_Folha').val(converterData(data_folha));
+            $('#Entrada').val(extrairHora(entrada));
+            $('#Pausa').val(extrairHora(pausa));
+            $('#Retorno').val(extrairHora(retorno));
+            $('#Saida').val(extrairHora(saida));
+            $('#St_Ajuste').val(st_ajuste);
+            $('#Ds_Causa').val(ds_causa);
+            $('#Replica_Adm').val(replica_adm);         
+
+            // Desabilita o botão de Enviar
+            document.getElementById('pesquisarBtn').disabled = true;
+            document.getElementById('enviarBtn').disabled = true;
+        }
+
+
+        function pesquisarSolicitacao(id, idfolha) {
+            var id_func = "@ViewBag.Id_Funcionario";
+
+            if (!id) id = 0;
+            if (!idfolha) idfolha = 0;
+
+            $.ajax({
+                url: '/api/FolhaAjuste/Pesquisar/' + id + "/" + id_func + "/" + idfolha,
+                type: 'GET',
+                success: function (response) {
+                    if (response.sucesso) {
+                        //alert("Resultados: " + JSON.stringify(response));
+
+                        atualizarTabela(response.solicitacoes);
+                    } else {
+                        limparTabela();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    limparTabela();
+                }
+            });
+        }
+
+        function limparTabela() {
+            var tabela = $('#consultaTable2 tbody');
+            tabela.empty();
+            var row = '<tr><td colspan="7" class="text-center">Nenhuma solicitação encontrada</td></tr>';
+            tabela.append(row);
+        }
+
+        function atualizarTabela(dados) {
+            var tabela = $('#consultaTable2 tbody');
+            tabela.empty(); // Limpa a tabela existente
+
+            //alert(JSON.stringify(dados));
+
+            dados.forEach(function (sol) {
+                var row = '<tr ondblclick="editarSolicitacao(' + sol.id + ',' + sol.id_Folha + ',\'' + converterDataBrasil(sol.data_Folha) + '\', \'' + sol.entrada + '\',\'' + sol.pausa + '\',\'' + sol.retorno + '\',\'' + sol.saida + '\',\'' + sol.st_Ajuste + '\',\'' + sol.ds_Causa + '\',\'' + sol.replica_Adm + '\')">' +
+                    '<td class="text-center">' + sol.id + '</td>' +
+                    '<td class="text-center">' + sol.id_Folha + '</td>' +
+                    '<td class="text-center">' + extrairHora(sol.entrada) + '</td>' +
+                    '<td class="text-center">' + extrairHora(sol.pausa) + '</td>' +
+                    '<td class="text-center">' + extrairHora(sol.retorno) + '</td>' +
+                    '<td class="text-center">' + extrairHora(sol.saida) + '</td>' +
+                    '<td class="text-center">' + sol.st_Ajuste + '</td>' +
+                    '</tr>';
+                tabela.append(row);
+            });
+        }
+
+        function consultaAjuste() {
+            $('#consulta-tab').tab('show');
+            $('#IdFolha').val(0);
+            $('#Data_Folha').val('1990-01-01');
+            $('#St_Ajuste').val('PENDENTE');
+            $('#Entrada').val('00:00');
+            $('#Pausa').val('00:00');
+            $('#Retorno').val('00:00');
+            $('#Saida').val('00:00');
+            $('#Ds_Causa').val('');
+            $('#Replica_Adm').val('');
+
+        }
+        function novoAjuste() {
+            $('#IdFolha').val(0);
+            $('#Data_Folha').val('1990-01-01');
+            $('#St_Ajuste').val('PENDENTE');
+            $('#Entrada').val('00:00');
+            $('#Pausa').val('00:00');
+            $('#Retorno').val('00:00');
+            $('#Saida').val('00:00');
+            $('#cadastro-tab').tab('show');
+            $('#Ds_Causa').val('');
+            $('#Replica_Adm').val('');
+
+            // Habilitar o botão de Enviar
+            document.getElementById('pesquisarBtn').disabled = false;
+            document.getElementById('enviarBtn').disabled = false;
+        }
+    </script>
+</body>
+
+

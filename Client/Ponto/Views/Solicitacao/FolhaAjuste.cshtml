@@ -1,0 +1,310 @@
+﻿@* @page
+@model Ponto.Views.Solicitacao.FolhaAjusteModel *@
+@{
+    ViewData["Title"] = "Ajuste de Folha de Ponto";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+ 
+<head>
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Ajuste de Folha de Ponto</h2>
+        <div class="row" style="width:100%; height:100%; margin:1%;">
+            <div class="col-auto">
+                <label for="IdConsulta" class="col-form-label">Consultar:</label>
+            </div>
+            <input style="width:8%; min-width:50px" type="number" class="form-control" id="IdConsulta" name="IdConsulta" placeholder="ID Folha">
+            <input style="margin-left:1%; width:8%; min-width:50px;" type="number" class="form-control" id="IdFuncConsulta" name="IdFuncConsulta" placeholder="ID Funcionário">
+            <input style="margin-left:1%; width:15%; min-width:50px;" type="date" class="form-control" id="DataInicio" name="DataInicio" value="@ViewBag.DataInicio">
+            <input style="margin-left:1%; width:15%; min-width:50px;" type="date" class="form-control" id="DataFim" name="DataFim" value="@ViewBag.DataFim">
+            <button style="margin-left:10px; width:8%; min-width:80px" onclick="pesquisarFolha($('#IdConsulta').val(),$('#IdFuncConsulta').val(), $('#DataInicio').val(), $('#DataFim').val())" class="btn btn-primary">Pesquisar</button>
+        </div>
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="consulta-tab" data-toggle="tab" href="#consulta" role="tab" aria-controls="consulta" aria-selected="true" onclick="consultaFolha()">Folha de Ponto</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="edicao-tab" data-toggle="tab" href="#edicao" role="tab" aria-controls="edicao" aria-selected="false" onclick="editarFolha()">Edição</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="consulta" role="tabpanel" aria-labelledby="consulta-tab">
+                <div id="resultadoPesquisa"></div>
+            </div>
+            <div class="tab-pane fade" id="edicao" role="tabpanel" aria-labelledby="edicao-tab">
+                <form id="edicaoForm" method="post" onsubmit="SalvarFolha(); return false;">
+                    <div class="container" style="height: 100%;
+                          margin: 0;">
+                        <div class="container2" style=" align-content:center; height:100%; width:80%;">
+                            <div class="container-fluid" style="height:100%; margin:0;">
+                                <h1 class="display-4" style="margin:2%;font-size:150%;">Ajuste de Folha de Ponto</h1>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="IDFOLHA">ID</label>
+                                <input style="margin-bottom:3%; width:6%; min-width:50px" type="number" class="form-control" id="IDFOLHA" name="IDFOLHA" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="IDFOLHA">Data da Folha</label>
+                                <input style="width:15%; min-width:100px; text-transform: uppercase;" type="date" class="form-control" id="DataFolha" name="DataFolha" disabled>
+                            </div>
+                            <div class="row" style="height: 100%; width:60%">
+                                <div class="col-md-6" style="padding: 2px; height: 100%;">                                                                
+                                    <label for="Entrada" class="col-form-label" style="margin-left:3%">Entrada</label>
+                                    <input style="width: 50%; min-width: 50px; margin-left:3%" type="time" class="form-control" id="Entrada" name="Entrada" value="00:00">
+                                    <label for="Pausa" class="col-form-label"  style="margin-left:3%">Pausa</label>                                  
+                                    <input style="width: 50%; min-width: 50px; margin-left:3%" type="time" class="form-control" id="Pausa" name="Pausa" value="00:00">
+                                </div>
+                                <div class="col-md-6" style="padding: 2px; height: 100%; margin-bottom:1%">
+                                    <label for="Retorno" class="col-form-label" style="margin-left:1%">Retorno</label>
+                                    <input style="width: 50%; min-width: 50px; margin-left:1%" type="time" class="form-control" id="Retorno" name="Retorno" value="00:00">
+                                    <label for="Saida" class="col-form-label" style="margin-left:1%">Saída</label>
+                                    <input style="width: 50%; min-width: 50px; margin-left:1%" type="time" class="form-control" id="Saida" name="Saida" value="00:00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="St_Jornada">Situação Jornada</label>
+                                    <select style="width:50%; min-width:150px; margin-bottom:3%;" class="form-control" id="St_Jornada" name="St_Jornada">
+                                        @foreach (var st in ViewBag.Situacoes)
+                                        {
+                                            <option value="@st.Id">@st.Descricao</option>
+                                        }
+                                    </select>
+                                </div>
+                                <label for="IDFOLHA">Data Último dia de folga</label>
+                                <input style="margin-left:10px; width:22%; min-width:80px" type="date" class="form-control" id="Ult_Dia_Folga" name="Ult_Dia_Folga" value="1990-01-01" required>
+                            </div>
+                            <button style="margin-top:3%" type="submit" class="btn btn-primary">Salvar</button>
+                            <button style="margin-top:3%; background-color:red; border-color:red" onclick="mostrarAbaConsulta(event)" class="btn btn-primary">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function consultaFolha() {
+            var idconsulta = $('#IdConsulta').val();
+            var idfuncconsulta = $('#IdFuncConsulta').val();
+            var data_inic = $('#DataInicio').val();
+            var data_fim = $('#DataFim').val();
+
+            $('#consulta-tab').tab('show');
+            $('#IDFOLHA').val(0);
+            $('#DataFolha').val('1990-01-01');
+            $('#Entrada').val('00:00');
+            $('#Pausa').val('00:00');
+            $('#Retorno').val('00:00');
+            $('#Saida').val('00:00');      
+            $('#St_Jornada').val(0);
+            $('#Ult_Dia_Folga').val('1990-01-01');
+        }
+
+        function mostrarAbaConsulta(event) {
+            // Impede a ação padrão do botão, que pode submeter o formulário
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Muda para a aba de consulta
+            $('#consulta-tab').tab('show');
+            $('#consulta-tab').addClass('active');
+            $('#edicao-tab').removeClass('active');
+
+            $('#IDFOLHA').val(0);
+            $('#DataFolha').val('1990-01-01');
+            $('#Entrada').val('00:00');
+            $('#Pausa').val('00:00');
+            $('#Retorno').val('00:00');
+            $('#Saida').val('00:00');
+            $('#St_Jornada').val(0);
+            $('#Ult_Dia_Folga').val('1990-01-01');
+        }
+
+
+        function pesquisarFolha(id_folha, id_funcionario, data_inicio, data_fim) {
+            if (id_folha == 0  && id_funcionario == 0) {
+                alert('Preencha o campo Id da Folha ou o Id do Funcionario!');
+                return;
+            }
+                 
+            $.ajax({
+                url: `/api/FolhaAjuste/PesquisarFolha/${id_folha ? id_folha : 0}/${id_funcionario ? id_funcionario : 0}/${data_inicio ? encodeURIComponent(data_inicio) : 'null'}/${data_fim ? encodeURIComponent(data_fim) : 'null'}`,
+                type: 'GET',
+                success: function (resultado) {
+                    //var folhas = resultado;
+                    //var folha2 = JSON.stringify(folha);
+                    //var jsonObject = JSON.parse(folha2);
+
+                    //alert("Resultado: " + JSON.stringify(resultado));
+                    //alert("Data folha: " + jsonObject.data_Folha);
+                    
+
+                    //var data = new Date("0001-01-02T00:53:00-03:00");
+                    //alert("Entrada: " + extrairHora(data));
+                    //alert("Entrada: " + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }));
+
+                    // Gere o HTML da tabela dinamicamente
+                    if (Array.isArray(resultado) && resultado.length > 0 && resultado[0].hasOwnProperty('id')) 
+                    {
+                        var tabelaHTML = `
+                            <table class="table mt-3">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Id Folha</th>
+                                        <th class="text-center">Data Folha</th>
+                                        <th class="text-center">Entrada</th>
+                                        <th class="text-center">Pausa</th>
+                                        <th class="text-center">Retorno</th>
+                                        <th class="text-center">Saida</th>
+                                        <th class="text-center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${resultado.map(folha => {
+                                    let data_folha = folha.data_Folha ? new Date(folha.data_Folha).toLocaleDateString('pt-BR') : 'N/A';
+                                    let entrada = extrairHora(folha.entrada, folha.data_Folha);
+                                    let pausa = extrairHora(folha.pausa, folha.data_Folha);
+                                    let retorno = extrairHora(folha.retorno, folha.data_Folha);
+                                    let saida = extrairHora(folha.saida, folha.data_Folha);
+                                    let ult_dia_folga = folha.ult_Dia_Folga ? new Date(folha.ult_Dia_Folga).toLocaleDateString('pt-BR') : 'N/A';
+                                    return `
+                                            <tr ondblclick="editarFolha(${folha.id})">
+                                                <td class="text-center">${folha.id}</td>
+                                                <td class="text-center">${data_folha}</td>
+                                                <td class="text-center">${entrada}</td>
+                                                <td class="text-center">${pausa}</td>
+                                                <td class="text-center">${retorno}</td>
+                                                <td class="text-center">${saida}</td>
+                                                <td class="text-center">
+                                                   <button class="btn btn-primary" onclick="editarFolha(${folha.id},'${data_folha}','${entrada}','${pausa}','${retorno}','${saida}',${folha.id_St_Jornada},'${ult_dia_folga}')">Editar</button>
+                                                </td>
+                                            </tr>
+                                        `;
+                        }).join('')}
+                                </tbody>
+                            </table>
+                        `;
+
+                        document.getElementById('resultadoPesquisa').innerHTML = tabelaHTML;
+
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Erro ao buscar folha: ", error);
+                }
+            });         
+        }
+
+        function extrairHora(dateTimeOffset, dataFolha) {
+            if (!dateTimeOffset) {
+                return 'N/A';
+            }
+
+            // Converte para string e substitui a data padrão por dataFolha
+            let dateString = dateTimeOffset.split('T')[0];
+            let timeString = dateTimeOffset.split('T')[1].split('-')[0];
+
+            if (dateString === "0001-01-02") {
+                let novaData = new Date(dataFolha).toISOString().split('T')[0];
+                var data = new Date(`${novaData}T${timeString}`);
+                data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
+                return data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
+            }
+
+            return timeString.slice(0, 5);
+        }
+
+        function convertStringToDateTimeOffset(dateTimeString) {
+            // Converte a string para um objeto Moment usando a zona UTC
+            const dateTimeUTC = moment.parseZone(dateTimeString).utc();
+
+            // Ajusta o fuso horário para Brasília (-03:00)
+            const dateTime = dateTimeUTC.tz('America/Sao_Paulo');
+
+            // Formata a data e hora no formato desejado, incluindo o fuso horário de Brasília
+            return dateTime.format("YYYY-MM-DDTHH:mm:ssZ");
+        }
+    
+        function converterData(data) {
+            const partes = data.split('/');
+            return `${partes[2]}-${partes[1]}-${partes[0]}`;
+        }
+
+        function editarFolha(id_folha,data_folha,entrada,pausa,retorno,saida,id_st_jornada,ult_dia_folga) {
+           
+            if (!data_folha) data_folha = '1990-01-01';
+            if (!entrada) entrada = '00:00';
+            if (!pausa) pausa = '00:00';
+            if (!retorno) retorno = '00:00';
+            if (!saida) saida = '00:00';
+
+            $('#IDFOLHA').val(id_folha);
+            $('#DataFolha').val(converterData(data_folha));
+            $('#Entrada').val(entrada.slice(0, 5));
+            $('#Pausa').val(pausa.slice(0, 5));
+            $('#Retorno').val(retorno.slice(0, 5));
+            $('#Saida').val(saida.slice(0, 5));
+            if (id_st_jornada !== undefined && id_st_jornada !== null) {
+                $('#St_Jornada').val(id_st_jornada);
+            }
+            if (ult_dia_folga !== undefined && ult_dia_folga !== null) {
+                $('#Ult_Dia_Folga').val(converterData(ult_dia_folga));
+            }
+
+            $('#edicao-tab').tab('show');
+        }
+
+        function SalvarFolha() {
+            var id = $('#IDFOLHA').val();
+            var data_folha = $('#DataFolha').val();
+            var entrada = data_folha + 'T' +  $('#Entrada').val() + ':00-03:00';
+            var pausa = data_folha + 'T' + $('#Pausa').val() + ':00-03:00';
+            var retorno = data_folha + 'T' + $('#Retorno').val() + ':00-03:00';
+            var saida = data_folha + 'T' + $('#Saida').val() + ':00-03:00';
+            var id_st_jornada = $('#St_Jornada').val();
+            var ult_dia_folga = $('#Ult_Dia_Folga').val();
+
+            //const dateTimeString = data_folha + 'T03:50:00-03:00';
+            //const dateTimeOffset = convertStringToDateTimeOffset(dateTimeString);
+            //alert(dateTimeOffset);  // "0001-01-02T03:50:00-03:00"
+
+            var folha = {
+                ID: id,
+                Entrada: convertStringToDateTimeOffset(entrada),
+                Pausa: convertStringToDateTimeOffset(pausa),
+                Retorno: convertStringToDateTimeOffset(retorno),
+                Saida: convertStringToDateTimeOffset(saida),
+                Id_St_jornada: id_st_jornada,
+                Ult_Dia_Folga: ult_dia_folga
+            };
+
+            //alert("Folha: " + JSON.stringify(folha));
+
+            var url = '/api/FolhaAjuste/Update/' + id;
+            var type = 'PUT';
+           
+            $.ajax({
+                url: url,
+                type: type,
+                contentType: 'application/json',
+                data: JSON.stringify(folha),
+                success: function (result) {
+                    alert('Registro atualizado com sucesso!');
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    alert('Erro ao salvar o folha: ' + error);
+                }
+            });
+        }
+
+    </script>
+</body>

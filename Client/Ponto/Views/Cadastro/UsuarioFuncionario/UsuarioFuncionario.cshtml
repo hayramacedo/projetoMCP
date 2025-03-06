@@ -1,0 +1,367 @@
+﻿@{
+    ViewData["Title"] = "Cadastro de Funcionario";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+<head>
+    <title>@ViewData["Title"]</title>
+    <style>
+        .centralizado {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .borda {
+            border: 1px solid lightgrey;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: lightgrey;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Funcionarios</h2>
+        <div class="row" style="width:100%; height:100%; margin:1%;">
+            <input style="width:8%; min-width:50px" type="number" class="form-control" id="IdConsulta" name="IdConsulta">
+            <input style="margin-left:1%; width:30%; min-width:50px" type="text" class="form-control" id="DescricaoConsulta" name="DescricaoConsulta">
+            <button style="margin-left:10px; width:8%; min-width:80px" onclick="pesquisarFuncionario($('#IdConsulta').val(), $('#DescricaoConsulta').val())" class="btn btn-primary">Pesquisar</button>
+        </div>
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="consulta-tab" data-toggle="tab" href="#consulta" role="tab" aria-controls="consulta" aria-selected="true" onclick="consultaFuncionario()">Funcionarios</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="cadastro-tab" data-toggle="tab" href="#cadastro" role="tab" aria-controls="cadastro" aria-selected="false" onclick="novoFuncionario()">Cadastro</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="consulta" role="tabpanel" aria-labelledby="consulta-tab">
+                <table class="table mt-3" id="consulta">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome Completo</th>
+                            <th>Cpf</th>
+                            <th>E-mail</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var funcionario in Model.Funcionarios)
+                        {
+                            <tr ondblclick="editarFuncionario(@funcionario.Id)">
+                                <td>@funcionario.Id</td>
+                                <td>@funcionario.Nome_Completo</td>
+                                <td>@funcionario.Cpf</td>
+                                <td>@funcionario.Email</td>
+                                <td>
+                                    <button class="btn btn-primary" onclick="editarFuncionario(@funcionario.Id, '@funcionario.Nome_Completo', 
+                                    '@funcionario.Cpf', '@funcionario.Email','@funcionario.Dt_Nasc','@funcionario.Matricula', '@funcionario.Dt_Admissao',
+                                    '@funcionario.Id_Empresa','@funcionario.Id_Cargo','@funcionario.Id_Escala','@funcionario.Dt_Inic_BancoH','@funcionario.Ativo',
+                                     '@funcionario.Usuario.Username','@funcionario.Usuario.Nickname','@funcionario.Usuario.Password')">
+                                        Editar
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" onclick="deletarFuncionario(@funcionario.Id)" style="background-color:red; border-color:red">Deletar</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <button class="btn btn-success" onclick="novoFuncionario()">Novo</button>
+            </div>
+            <div class="tab-pane fade" id="cadastro" role="tabpanel" aria-labelledby="cadastro-tab">
+                <form id="cadastroForm" method="post" onsubmit="SalvarFuncionario(); return false;">
+                <div class="row">
+                    <!-- Painel de Cadastro de Funcionário -->
+                    <div class="col-md-6" style="padding: 20px;">
+                        <h1 class="display-4" style="font-size: 150%;">Cadastro de Funcionário</h1>
+                        <div class="form-group">
+                            <label for="ID">ID</label>
+                            <input style="margin-bottom: 3%; width: 10%; min-width: 50px;" type="number" class="form-control" id="ID" name="ID" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="Nome_Completo">Nome Completo</label>
+                            <input style="width: 80%; min-width: 150px;" type="text" class="form-control" id="Nome_Completo" name="Nome_Completo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="Cpf">Cpf</label>
+                            <input style="width: 50%; min-width: 100px;" type="text" class="form-control" id="Cpf" name="Cpf" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="Email">E-mail</label>
+                            <input style="width: 50%; min-width: 80px;" type="text" class="form-control" id="Email" name="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="Matricula">Matrícula</label>
+                            <input style="width: 50%; min-width: 80px;" type="text" class="form-control" id="Matricula" name="Matricula" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="Dt_Nasc">Data Nascimento</label>
+                            <input style="width: 30%; min-width: 80px;" type="date" class="form-control" id="Dt_Nasc" name="Dt_Nasc" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Empresa">Empresa</label>
+                            <select style="width:50%; min-width:150px; margin-bottom:3%;" class="form-control" id="Empresa" name="Empresa">
+                                @foreach (var emp in ViewBag.Empresas)
+                                {
+                                   <option value="@emp.Id">@emp.Fantasia</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Cargo">Cargo</label>
+                            <select style="width:50%; min-width:150px; margin-bottom:3%;" class="form-control" id="Cargo" name="Cargo">
+                                @foreach (var cargo in ViewBag.Cargos)
+                                {
+                                   <option value="@cargo.Id">@cargo.Descricao</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Escala">Escala</label>
+                            <select style="width:50%; min-width:150px; margin-bottom:3%;" class="form-control" id="Escala" name="Escala">
+                                @foreach (var esc in ViewBag.Escalas)
+                                {
+                                    <option value="@esc.Id">@esc.Descricao</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <div style="width:100%;" class="row">
+                                <div class="form-group col-md-6">
+                                    <div class="row">
+                                       <div class="form-group col-md-6" style="width:70%;">
+                                          <label for="Dt_Admissao">Data Admissão</label>
+                                          <input style="width: 90%; min-width: 60px;" type="date" class="form-control" id="Dt_Admissao" name="Dt_Admissao" required>
+                                       </div>
+                                       <div class="form-group col-md-6" style="width:30%;">
+                                          <label for="Ativo">Ativo</label>
+                                          <input style="margin-bottom:3%; width:20%; min-width:40px; text-transform: uppercase;" type="text" class="form-control" id="Ativo" name="Ativo">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="Dt_Inic_BancoH">Data Início Banco de Horas</label>
+                                    <input style="width: 60%; min-width: 60px;" type="date" class="form-control" id="Dt_Inic_BancoH" name="Dt_Inic_BancoH" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Painel de Cadastro de Usuário -->
+                    <div class="col-md-6" style="padding: 20px;">
+                        <div class="centralizado borda">
+                            <h1 class="display-4" style="font-size: 150%;">Usuário</h1>
+                            <div class="form-group">
+                               <label for="Username">Username</label>
+                               <input style="width: 100%; min-width: 150px;" type="text" class="form-control" id="Username" name="Username" required>
+                            </div>
+                            <div class="form-group">
+                               <label for="Nickname">Nickname</label>
+                               <input style="width: 100%; min-width: 80px;" type="text" class="form-control" id="Nickname" name="Nickname" required>
+                            </div>
+                            <div class="form-group">
+                               <label for="Password">Password</label>
+                               <input style="width: 80%; min-width: 80px;" type="password" class="form-control" id="Password" name="Password" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                       <button style="margin-top: 3%;" type="submit" class="btn btn-primary">Salvar</button>
+                       <button style="margin-top: 3%; background-color: red; border-color: red;" onclick="consultaFuncionario()" class="btn btn-primary">Cancelar</button>
+                     </div>
+                </div>                    
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function consultaFuncionario() {
+            let currentDate = new Date();
+            let formattedDate = currentDate.toISOString().split('T')[0];
+           
+            $('#consulta-tab').tab('show');
+            $('#ID').val(0);
+            $('#Nome_Completo').val('');
+            $('#Cpf').val('');
+            $('#Email').val('');
+            $('#Dt_Nasc').val('2000-01-01');
+            $('#Matricula').val('');
+            $('#Dt_Admissao').val(formattedDate);
+            $('#Empresa').val(0);
+            $('#Cargo').val(0);
+            $('#Escala').val(0);
+            $('#Ativo').val('S');
+            $('#Dt_Inic_BancoH').val(formattedDate);
+            $('#Username').val('');
+            $('#Nickname').val('');
+            $('#Password').val('');          
+        }
+
+
+        function pesquisarFuncionario(id, nome) {
+            if (!id && !nome) {
+                window.location.href = "/api/UsuarioFuncionario/UsuarioFuncionario/UsuarioFuncionario";
+            } else {
+                window.location.href = `/api/UsuarioFuncionario/UsuarioFuncionario/Pesquisar/${id ? id : 0}/${nome ? encodeURIComponent(nome) : ''}`;
+            }
+        }
+         
+        function novoFuncionario() {
+            let currentDate = new Date();
+            let formattedDate = currentDate.toISOString().split('T')[0];
+
+            $('#ID').val(0);
+            $('#Nome_Completo').val('');
+            $('#Cpf').val('');
+            $('#Email').val('');
+            $('#Dt_Nasc').val('2000-01-01');
+            $('#Matricula').val('');
+            $('#Dt_Admissao').val(formattedDate);
+            $('#Empresa').val(0);
+            $('#Cargo').val(0);
+            $('#Escala').val(0);
+            $('#Ativo').val('S');
+            $('#Dt_Inic_BancoH').val(formattedDate);
+            $('#Username').val('');
+            $('#Nickname').val('');
+            $('#Password').val('');
+            $('#cadastro-tab').tab('show');
+
+            document.getElementById('Username').disabled = false;
+        }
+        function editarFuncionario(id, nome, cpf, email, dt_nasc, matricula, dt_admissao,
+            id_empresa, id_cargo, id_escala, dt_inic_bancoh, ativo, username, nickname, password) {
+
+            var dt_nasc2 = dt_nasc.split(" ")[0];
+            var partes = dt_nasc2.split("/");
+            var dt_nascAtualizada = partes[2] + "-" + partes[1] + "-" + partes[0];
+             
+            var dt_admissao2 = dt_admissao.split(" ")[0];
+            var partes2 = dt_admissao2.split("/");
+            var dt_admAtualizada = partes2[2] + "-" + partes2[1] + "-" + partes2[0];
+
+            var dt_inic_bancoh2 = dt_inic_bancoh.split(" ")[0];
+            var partes2 = dt_inic_bancoh2.split("/");
+            var dtbancohAtualizada = partes2[2] + "-" + partes2[1] + "-" + partes2[0];
+
+
+            $('#ID').val(id);
+            $('#Nome_Completo').val(nome);
+            $('#Cpf').val(cpf);
+            $('#Email').val(email);
+            $('#Dt_Nasc').val(dt_nascAtualizada);
+            $('#Matricula').val(matricula);
+            $('#Dt_Admissao').val(dt_admAtualizada);
+            $('#Empresa').val(id_empresa);
+            $('#Cargo').val(id_cargo);
+            $('#Escala').val(id_escala);
+            $('#Ativo').val(ativo);
+            $('#Dt_Inic_BancoH').val(dtbancohAtualizada);
+            $('#Username').val(username);
+            $('#Nickname').val(nickname);
+            $('#Password').val(password);
+            $('#cadastro-tab').tab('show');
+
+            document.getElementById('Username').disabled = true;
+
+        }
+        function deletarFuncionario(id) {
+            var confirmar = confirm('Você tem certeza de que deseja deletar este funcionario?');
+            if (confirmar) {
+                $.ajax({
+                    url: '/api/UsuarioFuncionario/UsuarioFuncionario/Delete/' + id,
+                    type: 'DELETE',
+                    success: function (result) {
+                        alert('Fucionario deletado com sucesso!');
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Erro ao deletar o funcionario: ' + error);
+                    }
+                });
+            }
+        }
+
+        function SalvarFuncionario() {
+            var id = $('#ID').val();
+            var nome = $('#Nome_Completo').val();
+            var cpf = $('#Cpf').val();
+            var email = $('#Email').val();
+            var dt_nasc = $('#Dt_Nasc').val();
+            var matricula = $('#Matricula').val();
+            var dt_admissao = $('#Dt_Admissao').val();
+            var id_empresa = $('#Empresa').val();
+            var id_cargo = $('#Cargo').val();
+            var id_escala = $('#Escala').val();
+            var ativo = $('#Ativo').val();
+            var dt_inic_bancoh = $('#Dt_Inic_BancoH').val();
+            var username = $('#Username').val();
+            var nickname = $('#Nickname').val();
+            var password = $('#Password').val();
+
+
+            var funcionario = {
+                ID: id,
+                Nome_Completo: nome,
+                Cpf: cpf,
+                Email: email,
+                Dt_Nasc: dt_nasc,
+                Matricula: matricula,
+                Dt_Admissao: dt_admissao,
+                Id_Empresa: id_empresa,
+                Id_Cargo: id_cargo,
+                Id_Escala: id_escala,
+                Ativo: ativo,
+                Dt_Inic_BancoH: dt_inic_bancoh,
+                Usuario: {
+                    Username: username,
+                    Nickname: nickname,
+                    Password: password,
+                    Ativo: ativo
+                }
+            };
+
+            var url, type;
+
+            if (id == 0) {
+                url = '/api/UsuarioFuncionario/UsuarioFuncionario/Create';
+                type = 'POST';
+            } else {
+                url = '/api/UsuarioFuncionario/UsuarioFuncionario/Update/' + id;
+                type = 'PUT';
+            }
+
+            $.ajax({
+                url: url,
+                type: type,
+                contentType: 'application/json',
+                data: JSON.stringify(funcionario),
+                success: function (result) {
+                    alert('Funcionario salvo com sucesso!');
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    alert('Erro ao salvar o funcionario: ' + error);
+                }
+            });
+        }
+
+    </script>
+</body>
+
