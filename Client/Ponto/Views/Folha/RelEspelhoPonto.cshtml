@@ -1,0 +1,173 @@
+﻿@{
+    //Layout = null;
+    ViewData["Title"] = "Espelho de Ponto";
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+               font-family: Arial, sans-serif;
+               margin: 20px;
+            }
+            h1 {
+               text-align: center;
+            }
+            table {
+               width: 100%;
+               border-collapse: collapse;
+               margin-top: 20px;
+            }
+            table, th, td {
+               border: 1px solid black;
+            }
+            th, td {
+               padding: 10px;
+               text-align: left;
+            }
+            .btn {
+                display: block;
+                margin: 20px auto;
+                padding: 10px 20px;
+                background: green;
+                color: white;
+                text-align: center;
+                border: none;
+                cursor: pointer;
+            }
+            p {
+                margin: 2px 0;
+            }
+        </style>
+    </head>
+    <body>
+
+    <div id="corpo-relatorio">
+        <header style="margin-bottom: 20px;">
+            <h1 class="display-4" style="font-size:200%;font-weight: bold; text-align:left">@ViewData["Title"]</h1>
+            <div style="border-bottom: 1px solid black; padding-bottom: 10px; margin-bottom: 20px;"></div>
+            <div style="font-size: 14px; text-align: left;">
+                <p style="font-size:120%">@Model.Empresa.Razao_Social</p>
+                <p style="font-size:110%">@Model.Empresa.Endereco, @Model.Empresa.Numero - @Model.Empresa.Bairro - @Model.Empresa.Cep - @Model.Empresa.Municipio - @Model.Empresa.Uf</p>
+                <p style="font-size:110%">CNPJ: @Model.Empresa.Cnpj <label style="padding: 0 5px;"></label> Telefone: @Model.Empresa.Telefone</p>
+                <div style="margin-bottom:2%"></div>
+                <p style="font-size:110%"><strong style="padding: 0 10px;">Nome:</strong> @Model.Funcionario.Nome_Completo <strong style="padding: 0 10px;">PIS:</strong> @Model.Funcionario.Pis <strong style="padding: 0 10px;">Admissão:</strong> @Model.Funcionario.Dt_Admissao.ToString("dd/MM/yyyy")</p>
+                <p style="font-size:110%; display: flex; justify-content: space-between; align-items: center;">
+                    <span>
+                        <strong style="padding: 0 10px;">CPF:</strong> @Model.Funcionario.Cpf
+                        <strong style="padding: 0 10px;">Cargo:</strong> @Model.Funcionario.Cargo
+                    </span>
+                    <label id="periodo" style="text-align: right; font-size:110%">Período de <strong>@ViewBag.DataInicio</strong> a <strong>@ViewBag.DataFim</strong></label>
+                </p>
+
+            </div>
+        </header>
+
+        <table class="table mt-3" id="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="text-center">Id Folha</th>
+                    <th class="text-center">Data da Folha</th>
+                    <th class="text-center">Entrada</th>
+                    <th class="text-center">Pausa</th>
+                    <th class="text-center">Retorno</th>
+                    <th class="text-center">Saída</th>
+                    <th class="text-center">Situação Jornada</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var folha in Model.Folhas)
+                {
+                     <tr>
+                        <td>@folha.Data_Folha.ToString("dddd")</td>
+                        <td class="text-center">@folha.Id</td>
+                        <td class="text-center">@folha.Data_Folha.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center">@folha.Entrada.ToString("HH:mm")</td>
+                        <td class="text-center">@folha.Pausa.ToString("HH:mm")</td>
+                        <td class="text-center">@folha.Retorno.ToString("HH:mm")</td>
+                        <td class="text-center">@folha.Saida.ToString("HH:mm")</td>
+                        <td class="text-center">@folha.St_Jornada</td>
+                     </tr>
+                }
+            </tbody>
+        </table>
+    
+        <footer style="margin-top: 10%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="text-align: center; width: 45%;">
+                    <hr style="width: 100%; margin: 0 auto;">
+                    <p>Colaborador</p>
+                </div>
+                <div style="text-align: center; width: 45%;">
+                    <hr style="width: 100%; margin: 0 auto;">
+                    <p>Empregador</p>
+                </div>
+            </div>
+        </footer>
+        </div>
+    <button class="btn" onclick="gerarRelatorioPDF()">Imprimir Relatório</button>
+
+       <script>
+          function imprimirRelatorio() {
+                const botao = document.querySelector(".btn");
+                botao.style.display = "none";
+                window.print(); 
+                botao.style.display = "block"; 
+          }
+
+          async function gerarRelatorioPDF() 
+          {
+            const { jsPDF } = window.jspdf;
+
+            const elemento = document.querySelector('#corpo-relatorio');
+            const canvas = await html2canvas(elemento, { scale: 2 });
+
+            const imgData = canvas.toDataURL('image/png');
+
+            // Configura o PDF e as margens
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const margemEsquerda = 10; // Margem esquerda em mm
+            const margemTopo = 10; // Margem superior em mm
+            const margemDireita = 10; // Margem direita em mm
+            const larguraUtil = 210 - margemEsquerda - margemDireita; // Largura útil da página
+            const alturaPagina = 297; // Altura da página A4 em mm
+            const alturaUtil = alturaPagina - 2 * margemTopo; // Altura útil com margens
+
+            // Calcula a altura proporcional da imagem
+            const imgWidth = larguraUtil;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let posicaoY = margemTopo;
+
+            // Se o conteúdo exceder a altura da página
+            if (imgHeight > alturaUtil) {
+                let alturaRestante = imgHeight;
+
+                while (alturaRestante > 0) {
+                    pdf.addImage(imgData, 'PNG', margemEsquerda, posicaoY, imgWidth, Math.min(alturaRestante, alturaUtil));
+                    alturaRestante -= alturaUtil;
+                    if (alturaRestante > 0) {
+                        pdf.addPage(); // Adiciona uma nova página
+                    }
+                }
+            } else {
+                // Adiciona o conteúdo normalmente se couber em uma página
+                pdf.addImage(imgData, 'PNG', margemEsquerda, margemTopo, imgWidth, imgHeight);
+            }
+
+            pdf.save("EspelhoPonto.pdf"); // Salva o PDF
+          }
+
+
+       </script>
+    </body>
+</html>

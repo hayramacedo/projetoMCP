@@ -21,17 +21,17 @@ namespace PontoServer.Controllers
         public ListaSolicitacaoAjusteResponse Get(int? id, int? id_funcionario, int? id_folha)
         {
             Repositorio repositorio = new Repositorio();
-            List<SolicitcaoAjuste> folhas;
+            List<SolicitacaoAjuste> folhas;
             try
             {
                 using (var tabela = repositorio.GetFolhaAjuste(id, id_funcionario, id_folha))
                 {
                     if (tabela.Rows.Count > 0)
                     {
-                        folhas = new List<SolicitcaoAjuste>();
+                        folhas = new List<SolicitacaoAjuste>();
                         foreach (DataRow row in tabela.Rows)
                         {
-                            SolicitcaoAjuste folha = new SolicitcaoAjuste
+                            SolicitacaoAjuste folha = new SolicitacaoAjuste
                             {
                                 Id = Convert.ToInt32(row["Id"]),
                                 Id_Funcionario = Int32.Parse(row["Id_Funcionario"].ToString()),
@@ -67,13 +67,14 @@ namespace PontoServer.Controllers
         /// </summary>
         [HttpPost]
         [Route("api/SolicitacaoAjuste")]
-        public SolicitacaoAjusteResponse Post([FromBody] SolicitcaoAjuste folhaAjuste)
+        public SolicitacaoAjusteResponse Post([FromBody] SolicitacaoAjuste folhaAjuste)
         {
             try
             {
                 Repositorio repositorio = new Repositorio();
                 var camposValores = new Dictionary<string, object>
                 {
+                    { "@id", folhaAjuste.Id},
                     { "@id_funcionario", folhaAjuste.Id_Funcionario },
                     { "@id_folha", folhaAjuste.Id_Folha },
                     { "@entrada", folhaAjuste.Entrada },                   
@@ -102,7 +103,7 @@ namespace PontoServer.Controllers
         /// </summary>
         [HttpPut]
         [Route("api/SolicitacaoAjuste/{id}")]
-        public SolicitacaoAjusteResponse Put(int id, [FromBody] SolicitcaoAjuste folhaAjuste)
+        public SolicitacaoAjusteResponse Put(int id, [FromBody] SolicitacaoAjuste folhaAjuste)
         {
             //st_ajuste (P-PENDENTE, R-REJEITADO, A-ACEITO, C-CANCELADO)
 
@@ -152,15 +153,37 @@ namespace PontoServer.Controllers
 
         }
 
+        // GET api/values/5
+        /// <summary>
+        /// Traz próximo id da tabela Solicitacao_Ajuste
+        /// </summary>
+        [HttpGet]
+        [Route("api/SolicitacaoAjuste/ProximoID")]
+        public int GetProximoID()
+        {
+            Repositorio repositorio = new Repositorio();
+            List<SolicitacaoAjuste> folhas;
+            try
+            {
+                var id = repositorio.ProximoIDSolicitacao();
+                return id;          
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+
+
         public class ListaSolicitacaoAjusteResponse
         {
-            public List<SolicitcaoAjuste> Solicitacoes { get; set; }
+            public List<SolicitacaoAjuste> Solicitacoes { get; set; }
             public string Mensagem { get; set; }
             public bool Sucesso { get; set; }
         }
         public class SolicitacaoAjusteResponse
         {
-            public SolicitcaoAjuste FolhaAjuste { get; set; }
+            public SolicitacaoAjuste FolhaAjuste { get; set; }
             public string Mensagem { get; set; }
             public bool Sucesso { get; set; }
         }

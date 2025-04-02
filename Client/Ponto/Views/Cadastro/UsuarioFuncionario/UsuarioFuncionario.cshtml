@@ -68,8 +68,8 @@
                                 <td>
                                     <button class="btn btn-primary" onclick="editarFuncionario(@funcionario.Id, '@funcionario.Nome_Completo', 
                                     '@funcionario.Cpf', '@funcionario.Email','@funcionario.Dt_Nasc','@funcionario.Matricula', '@funcionario.Dt_Admissao',
-                                    '@funcionario.Id_Empresa','@funcionario.Id_Cargo','@funcionario.Id_Escala','@funcionario.Dt_Inic_BancoH','@funcionario.Ativo',
-                                     '@funcionario.Usuario.Username','@funcionario.Usuario.Nickname','@funcionario.Usuario.Password')">
+                                    '@funcionario.Id_Empresa','@funcionario.Id_Cargo','@funcionario.Id_Escala','@funcionario.Dt_Inic_BancoH','@funcionario.Pis',
+                                    '@funcionario.Ativo','@funcionario.Usuario.Username','@funcionario.Usuario.Nickname','@funcionario.Usuario.Password')">
                                         Editar
                                     </button>
                                 </td>
@@ -98,7 +98,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Cpf">Cpf</label>
-                            <input style="width: 50%; min-width: 100px;" type="text" class="form-control" id="Cpf" name="Cpf" required>
+                            <input style="width: 50%; min-width: 100px;" type="text" class="form-control" id="Cpf" name="Cpf" maxlength="14" required oninput="this.value = mascaraCPF(this.value)">
                         </div>
                         <div class="form-group">
                             <label for="Email">E-mail</label>
@@ -115,7 +115,7 @@
 
                         <div class="form-group">
                             <label for="Empresa">Empresa</label>
-                            <select style="width:50%; min-width:150px; margin-bottom:3%;" class="form-control" id="Empresa" name="Empresa">
+                            <select style="width:50%; min-width:150px; margin-bottom:1%;" class="form-control" id="Empresa" name="Empresa">
                                 @foreach (var emp in ViewBag.Empresas)
                                 {
                                    <option value="@emp.Id">@emp.Fantasia</option>
@@ -124,7 +124,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Cargo">Cargo</label>
-                            <select style="width:50%; min-width:150px; margin-bottom:3%;" class="form-control" id="Cargo" name="Cargo">
+                            <select style="width:50%; min-width:150px; margin-bottom:1%;" class="form-control" id="Cargo" name="Cargo">
                                 @foreach (var cargo in ViewBag.Cargos)
                                 {
                                    <option value="@cargo.Id">@cargo.Descricao</option>
@@ -133,7 +133,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Escala">Escala</label>
-                            <select style="width:50%; min-width:150px; margin-bottom:3%;" class="form-control" id="Escala" name="Escala">
+                            <select style="width:50%; min-width:150px; margin-bottom:1%;" class="form-control" id="Escala" name="Escala">
                                 @foreach (var esc in ViewBag.Escalas)
                                 {
                                     <option value="@esc.Id">@esc.Descricao</option>
@@ -160,6 +160,10 @@
                                     <input style="width: 60%; min-width: 60px;" type="date" class="form-control" id="Dt_Inic_BancoH" name="Dt_Inic_BancoH" required>
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Pis">Pis</label>
+                                <input style="width: 30%; min-width: 80px;" type="text" class="form-control" id="Pis" name="Pis" required>
                         </div>
                     </div>
 
@@ -191,6 +195,14 @@
         </div>
     </div>
     <script>
+        function mascaraCPF(cpf) {
+            cpf = cpf.replace(/\D/g, '');
+            cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+            cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+            cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            return cpf;
+        }
+
         function consultaFuncionario() {
             let currentDate = new Date();
             let formattedDate = currentDate.toISOString().split('T')[0];
@@ -206,6 +218,7 @@
             $('#Empresa').val(0);
             $('#Cargo').val(0);
             $('#Escala').val(0);
+            $('#Pis').val('');
             $('#Ativo').val('S');
             $('#Dt_Inic_BancoH').val(formattedDate);
             $('#Username').val('');
@@ -236,6 +249,7 @@
             $('#Empresa').val(0);
             $('#Cargo').val(0);
             $('#Escala').val(0);
+            $('#Pis').val('');
             $('#Ativo').val('S');
             $('#Dt_Inic_BancoH').val(formattedDate);
             $('#Username').val('');
@@ -246,7 +260,7 @@
             document.getElementById('Username').disabled = false;
         }
         function editarFuncionario(id, nome, cpf, email, dt_nasc, matricula, dt_admissao,
-            id_empresa, id_cargo, id_escala, dt_inic_bancoh, ativo, username, nickname, password) {
+            id_empresa, id_cargo, id_escala, dt_inic_bancoh, pis, ativo, username, nickname, password) {
 
             var dt_nasc2 = dt_nasc.split(" ")[0];
             var partes = dt_nasc2.split("/");
@@ -271,6 +285,7 @@
             $('#Empresa').val(id_empresa);
             $('#Cargo').val(id_cargo);
             $('#Escala').val(id_escala);
+            $('#Pis').val(pis);
             $('#Ativo').val(ativo);
             $('#Dt_Inic_BancoH').val(dtbancohAtualizada);
             $('#Username').val(username);
@@ -309,6 +324,7 @@
             var id_empresa = $('#Empresa').val();
             var id_cargo = $('#Cargo').val();
             var id_escala = $('#Escala').val();
+            var pis = $('#Pis').val();
             var ativo = $('#Ativo').val();
             var dt_inic_bancoh = $('#Dt_Inic_BancoH').val();
             var username = $('#Username').val();
@@ -334,7 +350,8 @@
                     Nickname: nickname,
                     Password: password,
                     Ativo: ativo
-                }
+                },
+                Pis: pis
             };
 
             var url, type;

@@ -31,6 +31,14 @@ namespace PontoServer.Controllers
                         Razao_Social = row["Razao_Social"].ToString(),
                         Fantasia = row["Fantasia"].ToString(),
                         Cnpj = row["Cnpj"].ToString(),
+                        Endereco = row["Endereco"].ToString(),
+                        Numero = row["Numero"].ToString(),
+                        Complemento = row["Complemento"].ToString(),
+                        Bairro = row["Bairro"].ToString(),
+                        Municipio = row["Municipio"].ToString(),
+                        Uf = row["Uf"].ToString(),
+                        Cep = row["Cep"].ToString(),
+                        Telefone = row["Telefone"].ToString(),
                         Dh_Inclusao = (DateTime)row["Dh_Inclusao"]
                     };
 
@@ -65,6 +73,14 @@ namespace PontoServer.Controllers
                                 Razao_Social = row["Razao_Social"].ToString(),
                                 Fantasia = row["Fantasia"].ToString(),
                                 Cnpj = row["Cnpj"].ToString(),
+                                Endereco = row["Endereco"].ToString(),
+                                Numero = row["Numero"].ToString(),
+                                Complemento = row["Complemento"].ToString(),
+                                Bairro = row["Bairro"].ToString(),
+                                Municipio = row["Municipio"].ToString(),
+                                Uf = row["Uf"].ToString(),
+                                Cep = row["Cep"].ToString(),
+                                Telefone = row["Telefone"].ToString(),
                                 Dh_Inclusao = (DateTime)row["Dh_Inclusao"]
                             };
 
@@ -98,7 +114,15 @@ namespace PontoServer.Controllers
                 {
                     { "@razao_social", empresa.Razao_Social },
                     { "@fantasia", empresa.Fantasia },
-                    { "@cnpj", empresa.Cnpj }
+                    { "@cnpj", empresa.Cnpj },
+                    { "@endereco", empresa.Endereco },
+                    { "@numero", empresa.Numero },
+                    { "@complemento", empresa.Complemento },
+                    { "@bairro", empresa.Bairro },
+                    { "@municipio", empresa.Municipio },
+                    { "@uf", empresa.Uf },
+                    { "@cep", empresa.Cep },
+                    { "@telefone", empresa.Telefone }
                 };
 
                 var resultado = repositorio.InsertRegistro("EMPRESA", camposValores);
@@ -126,7 +150,15 @@ namespace PontoServer.Controllers
                 {
                     { "@razao_social", empresa.Razao_Social },
                     { "@fantasia", empresa.Fantasia },
-                    { "@cnpj", empresa.Cnpj }
+                    { "@cnpj", empresa.Cnpj },
+                    { "@endereco", empresa.Endereco },
+                    { "@numero", empresa.Numero },
+                    { "@complemento", empresa.Complemento },
+                    { "@bairro", empresa.Bairro },
+                    { "@municipio", empresa.Municipio },
+                    { "@uf", empresa.Uf },
+                    { "@cep", empresa.Cep },
+                    { "@telefone", empresa.Telefone }
                 };
 
                 var resultado = repositorio.UpdateRegistro("EMPRESA", camposValores, id);

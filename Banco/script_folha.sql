@@ -6,6 +6,10 @@ where id_funcionario = 1
 
 
 Select * from "SOLICITACAO_AJUSTE"
+delete from "SOLICITACAO_AJUSTE" where id = 6
+
+SELECT last_value + 1 FROM sq_id_solicitacao_ajuste;
+
 
 Select * from "USUARIO"
 
@@ -14,6 +18,7 @@ Select * from "FUNCIONARIO"
 Select * from "BANCO_HORAS"
 Select * from "BANCOH_X_FOLHA"
 Select * from "ATESTADO"
+delete from "ATESTADO" where id = 5
 
 Select * from "ESCALA" order by id
 escala_jornada

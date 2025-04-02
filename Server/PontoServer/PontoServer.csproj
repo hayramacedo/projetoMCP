@@ -207,7 +207,7 @@
     <Compile Include="Models\Empresa.cs" />
     <Compile Include="Models\Escala.cs" />
     <Compile Include="Models\Folha.cs" />
-    <Compile Include="Models\SolicitcaoAjuste.cs" />
+    <Compile Include="Models\SolicitacaoAjuste.cs" />
     <Compile Include="Models\Funcionario.cs" />
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\Situacao_Jornada.cs" />

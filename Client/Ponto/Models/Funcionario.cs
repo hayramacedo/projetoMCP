@@ -23,5 +23,6 @@ namespace Ponto.Models
         public string Escala { get; set; }
         public DateTime? Dt_Inic_BancoH { get; set; }
         public Usuario Usuario { get; set; }
+        public string Pis { get; set; }
     }
 }

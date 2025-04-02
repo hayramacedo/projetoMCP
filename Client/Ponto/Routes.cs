@@ -34,8 +34,10 @@ namespace Ponto
         public string rota_AtualizarFolha => $"{EnderecoApi}/AtualizarFolha/";
         public string rota_RegistroPonto => $"{EnderecoApi}/RegistroPonto/";
         public string rota_situacao => $"{EnderecoApi}/Situacoes/";
+        public string rota_solicitacao_proximoID => $"{EnderecoApi}/SolicitacaoAjuste/ProximoID";
         public string rota_solicitacao => $"{EnderecoApi}/SolicitacaoAjuste/";
         public string rota_solicitacaoAlt => $"{EnderecoApi}/SolicitacaoAjuste?id=";
         public string rota_SaldoBancoHoras => $"{EnderecoApi}/BancoHoras_Saldo/";
+        public string rota_atestado => $"{EnderecoApi}/Atestados/";
     }
 }

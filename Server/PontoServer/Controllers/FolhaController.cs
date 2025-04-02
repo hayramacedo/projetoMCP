@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using static PontoServer.Controllers.EmpresaController;
 using static PontoServer.Repositorio;
 
 namespace PontoServer.Controllers
@@ -191,12 +192,78 @@ namespace PontoServer.Controllers
             return resultado;
         }
 
+
+        [HttpGet]
+        [Route("api/Atestados/{id_solicitacao}")]
+        public AtestadoResponse GetAtestado(int id_solicitacao)
+        {
+            Repositorio repositorio = new Repositorio();
+            try
+            {
+                var tabela = repositorio.GetByParametrosInt("ATESTADO",0,"id_solicitacao", id_solicitacao.ToString());
+                Atestado atestado = new Atestado
+                {
+                    Id = Convert.ToInt32(tabela.Rows[0]["Id"]),
+                    Documento = tabela.Rows[0]["Documento"] != DBNull.Value && tabela.Rows[0]["Documento"] != null ? (byte[])tabela.Rows[0]["Documento"] : new byte[] { },
+                    Id_Funcionario = Convert.ToInt32(tabela.Rows[0]["Id_Funcionario"]),
+                    Id_Folha = Convert.ToInt32(tabela.Rows[0]["Id_Folha"]),
+                    Dh_Inclusao = (DateTime)tabela.Rows[0]["Dh_Inclusao"],
+                    Nm_Documento = tabela.Rows[0]["Nm_Documento"].ToString(),
+                    Id_Solicitacao = Convert.ToInt32(tabela.Rows[0]["Id_Solicitacao"])
+                };
+                return (new AtestadoResponse { Atestado = atestado, Mensagem = "Resultado OK", Sucesso = true });
+
+            }
+            catch (Exception ex)
+            {
+                return (new AtestadoResponse { Atestado = null, Mensagem = "Ocorreu um erro: " + ex.Message, Sucesso = false });
+            }
+        }
+
+        // POST api/values
+        /// <summary>
+        /// Inserir Atestado
+        /// </summary>
+        [HttpPost]
+        [Route("api/Atestados")]
+        public ApiResponse Post([FromBody] Atestado atestado)
+        {
+            try
+            {
+                Repositorio repositorio = new Repositorio();
+                var camposValores = new Dictionary<string, object>
+                {
+                    { "@documento", atestado.Documento },
+                    { "@id_funcionario", atestado.Id_Funcionario },
+                    { "@id_folha", atestado.Id_Folha },
+                    { "@nm_documento", atestado.Nm_Documento },
+                    { "@id_solicitacao", atestado.Id_Solicitacao }
+                };
+
+                var resultado = repositorio.InsertRegistro("ATESTADO", camposValores);
+
+                return (new ApiResponse { Mensagem = resultado.Mensagem, Sucesso = resultado.Sucesso });
+            }
+            catch (Exception ex)
+            {
+                return (new ApiResponse { Mensagem = "Ocorreu um erro: " + ex.Message, Sucesso = false });
+            }
+        }
+
         public class ListaFolhaResponse
         {
             public List<Folha> Folhas { get; set; }
             public string Mensagem { get; set; }
             public bool Sucesso { get; set; }
         }
+
+        public class AtestadoResponse
+        {
+            public Atestado Atestado { get; set; }
+            public string Mensagem { get; set; }
+            public bool Sucesso { get; set; }
+        }
+
         public class ApiResponse
         {
             public string Mensagem { get; set; }

@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>D:\Projetos\Deploy\pontoServer</_PublishTargetUrl>
-    <History>True|2025-03-05T15:44:15.1461612Z||;True|2025-03-05T12:43:08.8483202-03:00||;True|2025-03-05T12:40:52.7196369-03:00||;</History>
+    <History>True|2025-03-27T18:13:25.4796280Z||;True|2025-03-05T12:44:15.1461612-03:00||;True|2025-03-05T12:43:08.8483202-03:00||;True|2025-03-05T12:40:52.7196369-03:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -94,10 +94,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>06/10/2024 07:32:12</publishTime>
     </File>
     <File Include="bin/PontoServer.dll">
-      <publishTime>03/05/2025 12:44:14</publishTime>
+      <publishTime>03/27/2025 15:13:21</publishTime>
     </File>
     <File Include="bin/PontoServer.pdb">
-      <publishTime>03/05/2025 12:44:14</publishTime>
+      <publishTime>03/27/2025 15:13:21</publishTime>
     </File>
     <File Include="bin/pt-br/System.Net.Http.Formatting.resources.dll">
       <publishTime>05/27/2022 20:41:06</publishTime>

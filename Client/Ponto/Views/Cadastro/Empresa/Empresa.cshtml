@@ -51,7 +51,10 @@
                                 <td>@empresa.Fantasia</td>
                                 <td>@empresa.Cnpj</td>
                                 <td>
-                                    <button class="btn btn-primary" onclick="editarEmpresa(@empresa.Id, '@empresa.Razao_Social', '@empresa.Fantasia', '@empresa.Cnpj')">Editar</button>
+                                    <button class="btn btn-primary" onclick="editarEmpresa(@empresa.Id, '@empresa.Razao_Social', '@empresa.Fantasia', '@empresa.Cnpj',
+                                        '@empresa.Endereco','@empresa.Numero','@empresa.Complemento','@empresa.Bairro','@empresa.Municipio','@empresa.Uf','@empresa.Cep','@empresa.Telefone')">
+                                        Editar
+                                    </button>
                                 </td>
                                 <td>
                                     <button class="btn btn-primary" onclick="deletarEmpresa(@empresa.Id)" style="background-color:red; border-color:red">Deletar</button>
@@ -73,7 +76,7 @@
 
                             <div class="form-group">
                                 <label for="ID">ID</label>
-                                <input style="margin-bottom:3%; width:10%; min-width:50px" type="number" class="form-control" id="ID" name="ID" disabled>
+                                <input style="margin-bottom:2%; width:10%; min-width:50px" type="number" class="form-control" id="ID" name="ID" disabled>
                             </div>
                             <div class="form-group">
                                 <label for="Razao_Social">Razão Social</label>
@@ -85,9 +88,69 @@
                             </div>
                             <div class="form-group">
                                 <label for="Cnpj">Cnpj</label>
-                                <input style="width:20%; min-width:80px;" type="text" class="form-control" id="Cnpj" name="Cnpj" required>
+                                <input style="width:30%; min-width:80px;" type="text" class="form-control" id="Cnpj" name="Cnpj" maxlength="18" oninput="mascaraCnpj(this)" required>
                             </div>
-                            
+                            <div class="form-group">
+                                <label for="Telefone">Telefone</label>
+                                <input style="width:20%; min-width:80px;" type="text" class="form-control" id="Telefone" name="Telefone" maxlength="14" oninput="mascaraTelefone(this)">
+                            </div>
+
+                            <div style="width:100%; height:80%; margin-top:2%; border-color:darkgrey; border-width:1px; border-radius:8px; border-style:solid; padding:1%">                            
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="Cep">Cep</label>
+                                            <input style="width:80%; min-width:80px;" type="text" class="form-control" id="Cep" name="Cep" maxlength="9" oninput="mascaraCep(this)" required>
+                                        </div>
+                                    </div>
+                                    <div class="col" style="display: flex; align-items: flex-end;">
+                                        <button type="button" onclick="pesquisarCep()" class="btn btn-primary" style="background-color:green; border-color:green">Pesquisar</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="form-group">
+                                            <label for="Endereco">Endereco</label>
+                                            <input style="width:100%; min-width:80px;" type="text" class="form-control" id="Endereco" name="Endereco" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Numero">Numero</label>
+                                            <input style="width:5%; min-width:80px;" type="text" class="form-control" id="Numero" name="Numero" required>
+                                        </div>
+                                    </div>
+                                </div>                                                              
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label for="Complemento">Complemento</label>
+                                            <input style="width:100%; min-width:80px;" type="text" class="form-control" id="Complemento" name="Complemento">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Bairro">Bairro</label>
+                                            <input style="width:70%; min-width:80px;" type="text" class="form-control" id="Bairro" name="Bairro" required>
+                                        </div>
+                                    </div>
+                                </div>                                                          
+                                <div class="row">
+                                    <div class="col-5">
+                                        <div class="form-group">
+                                            <label for="Municipio">Municipio</label>
+                                            <input style="width:100%; min-width:80px;" type="text" class="form-control" id="Municipio" name="Municipio" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Uf">UF</label>
+                                            <input style="width:5%; min-width:80px;" type="text" class="form-control" id="Uf" name="Uf" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <button style="margin-top:3%" type="submit" class="btn btn-primary">Salvar</button>
                             <button style="margin-top:3%; background-color:red; border-color:red" onclick="consultaEmpresa()" class="btn btn-primary">Cancelar</button>
                         </div>
@@ -97,11 +160,73 @@
         </div>
     </div>
     <script>
+        function mascaraTelefone(input) {
+            let value = input.value.replace(/\D/g, ""); 
+            if (value.length <= 10) {
+                // Formato (##)####-####
+                value = value.replace(/^(\d{2})(\d{4})(\d{4})$/, "($1)$2-$3");
+            } else {
+                // Formato (##)#####-####
+                value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1)$2-$3");
+            }
+            input.value = value;
+        }
+
+        function mascaraCep(input) {
+            let value = input.value.replace(/\D/g, "");
+            value = value.replace(/^(\d{5})(\d{3})$/, "$1-$2"); // Aplica o formato #####-###
+            input.value = value;
+        }
+
+        function mascaraCnpj(input) {
+            let value = input.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+            value = value.replace(/^(\d{2})(\d)/, "$1.$2");
+            value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+            value = value.replace(/\.(\d{3})(\d)/, ".$1/$2");
+            value = value.replace(/(\d{4})(\d)/, "$1-$2");
+            input.value = value;
+        }
+
+        function pesquisarCep() {
+            const cep = $('#Cep').val();
+            const url = `https://viacep.com.br/ws/${cep}/json/`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("CEP não encontrado");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.erro) {
+                        alert("CEP inválido!");
+                        return;
+                    }
+                    $('#Endereco').val(data.logradouro);
+                    $('#Bairro').val(data.bairro);
+                    $('#Municipio').val(data.localidade);
+                    $('#Uf').val(data.uf);
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar o CEP:", error);
+                    alert("Erro ao buscar o CEP. Verifique o valor e tente novamente.");
+                });
+        }
+
         function consultaEmpresa() {
             $('#ID').val(0);
             $('#Razao_Social').val('');
             $('#Fantasia').val('');
             $('#Cnpj').val('');
+            $('#Endereco').val('');
+            $('#Numero').val('');
+            $('#Complemento').val('');
+            $('#Bairro').val('');
+            $('#Municipio').val('');
+            $('#Uf').val('');
+            $('#Cep').val('');
+            $('#Telefone').val('');
             $('#consulta-tab').tab('show');
         }
 
@@ -119,13 +244,29 @@
             $('#Razao_Social').val('');
             $('#Fantasia').val('');
             $('#Cnpj').val('');
+            $('#Endereco').val('');
+            $('#Numero').val('');
+            $('#Complemento').val('');
+            $('#Bairro').val('');
+            $('#Municipio').val('');
+            $('#Uf').val('');
+            $('#Cep').val('');
+            $('#Telefone').val('');
             $('#cadastro-tab').tab('show');
         }
-        function editarEmpresa(id, razao, fantasia, cnpj) {
+        function editarEmpresa(id, razao, fantasia, cnpj, endereco, numero, complemento, bairro, municipio, uf, cep, telefone) {
             $('#ID').val(id);
             $('#Razao_Social').val(razao);
             $('#Fantasia').val(fantasia);
             $('#Cnpj').val(cnpj);
+            $('#Endereco').val(endereco);
+            $('#Numero').val(numero);
+            $('#Complemento').val(complemento);
+            $('#Bairro').val(bairro);
+            $('#Municipio').val(municipio);
+            $('#Uf').val(uf);
+            $('#Cep').val(cep);
+            $('#Telefone').val(telefone);
             $('#cadastro-tab').tab('show');
 
         }
@@ -151,13 +292,28 @@
             var razao = $('#Razao_Social').val();
             var fantasia = $('#Fantasia').val();
             var cnpj = $('#Cnpj').val();
-            
+            var endereco = $('#Endereco').val();
+            var numero = $('#Numero').val();
+            var complemento = $('#Complemento').val();
+            var bairro = $('#Bairro').val();
+            var municipio = $('#Municipio').val();
+            var uf = $('#Uf').val();
+            var cep = $('#Cep').val();
+            var telefone = $('#Telefone').val();
 
             var empresa = {
                 ID: id,
                 Razao_Social: razao,
                 Fantasia: fantasia,
-                Cnpj: cnpj
+                Cnpj: cnpj,
+                Endereco: endereco,
+                Numero: numero,
+                Complemento: complemento,
+                Bairro: bairro,
+                Municipio: municipio,
+                Uf: uf,
+                Cep: cep,
+                Telefone: telefone
             };
 
             var url, type;

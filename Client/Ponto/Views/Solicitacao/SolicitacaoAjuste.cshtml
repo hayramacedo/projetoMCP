@@ -40,7 +40,8 @@
                             <th class="text-center">ID</th>
                             <th class="text-center">ID Funcionário</th>
                             <th class="text-center">ID Folha</th>
-                            <th class="text-center">Data Folha</th>
+                            @* <th class="text-center">Data Folha</th> *@
+                            <th class="text-center">Data Inclusão</th>
                             <th class="text-center">Causa</th>
                             <th class="text-center">Situação Ajuste</th>
                             <th class="text-center"></th>
@@ -54,7 +55,8 @@
                                 <td class="text-center">@sol.Id</td>
                                 <td class="text-center">@sol.Id_Funcionario</td>
                                 <td class="text-center">@sol.Id_Folha</td>
-                                <td class="text-center">@sol.Data_Folha.ToString("dd/MM/yyyy")</td>
+                                @* <td class="text-center">@sol.Data_Folha.ToString("dd/MM/yyyy")</td> *@
+                                <td class="text-center">@sol.Dh_Inclusao.ToString("dd/MM/yyyy")</td>
                                 <td class="text-center">@sol.Ds_Causa</td>
                                 <td class="text-center">@sol.St_Ajuste</td>
                                 <td>
@@ -100,7 +102,7 @@
                                                  
                             <div class="form-group">
                                 <label for="St_Ajuste">Situação Ajuste</label>
-                                <select id="St_Ajuste" name="St_Ajuste" class="form-control" style="width:30%">
+                                <select id="St_Ajuste" name="St_Ajuste" class="form-control" style="width:30%; min-width:150px">
                                     <option value="1">PENDENTE</option>
                                     <option value="2">ACEITO</option>
                                     <option value="3">REJEITADO</option>
@@ -108,20 +110,29 @@
                                 </select>
                             </div>
 
-                            <div class="row" style="height: 100%; width:40%">
+                            <div class="row" style="height: 100%; width:40%;margin-left:1px">
                                 <div class="col-md-6" style="padding: 2px; height: 100%;">
-                                    <label for="Entrada" class="col-form-label" style="margin-left:3%">Entrada</label>
-                                    <input style="width: 50%; min-width: 50px; margin-left:3%" type="time" class="form-control" id="Entrada" name="Entrada" value="00:00" disabled>
-                                    <label for="Pausa" class="col-form-label" style="margin-left:3%">Pausa</label>
-                                    <input style="width: 50%; min-width: 50px; margin-left:3%" type="time" class="form-control" id="Pausa" name="Pausa" value="00:00" disabled>
+                                    <label for="Entrada" class="col-form-label" style="margin-left:0.5%">Entrada</label>
+                                    <input style="width: 50%; min-width: 100px; margin-left:0.5%" type="time" class="form-control" id="Entrada" name="Entrada" value="00:00" disabled>
+                                    <label for="Pausa" class="col-form-label" style="margin-left:0.5%">Pausa</label>
+                                    <input style="width: 50%; min-width: 100px; margin-left:0.5%" type="time" class="form-control" id="Pausa" name="Pausa" value="00:00" disabled>
                                 </div>
                                 <div class="col-md-6" style="padding: 2px; height: 100%; margin-bottom:1%">
                                     <label for="Retorno" class="col-form-label" style="margin-left:1%">Retorno</label>
-                                    <input style="width: 50%; min-width: 50px; margin-left:1%" type="time" class="form-control" id="Retorno" name="Retorno" value="00:00" disabled>
+                                    <input style="width: 50%; min-width: 100px; margin-left:1%" type="time" class="form-control" id="Retorno" name="Retorno" value="00:00" disabled>
                                     <label for="Saida" class="col-form-label" style="margin-left:1%">Saída</label>
-                                    <input style="width: 50%; min-width: 50px; margin-left:1%" type="time" class="form-control" id="Saida" name="Saida" value="00:00" disabled>
+                                    <input style="width: 50%; min-width: 100px; margin-left:1%" type="time" class="form-control" id="Saida" name="Saida" value="00:00" disabled>
                                 </div>
                             </div>
+                            <div class="row" style="width:auto; height:auto; margin-top:1%; margin-bottom:1%">
+                               <div class="col-5" style="width:13%; min-width:100px;">
+                                   <button id="addAtestado" type="button" style="margin-left:1%;" onclick="VerDocumento()">Ver atestado</button>
+                                   <input type="file" id="fileInput" style="display: none;" />
+                               </div>
+                               <div class="col-1" style="min-width:100px;">
+                                   <label id="lbldoc" style="color:red;"></label>
+                               </div>
+                             </div>
 
                             <div class="form-group">
                                 <label for="Replica_Adm">Causa da Solicitação</label>
@@ -140,6 +151,8 @@
         </div>
     </div>
     <script>
+        let id_solicitacao = 0;
+
         function consultaSolicitacao() {
             $('#ID').val(0);
             $('#IDFuncionario').val(0);
@@ -153,6 +166,38 @@
             $('#St_Ajuste').val(1);
             $('#Replica_Adm').val('');
             $('#consulta-tab').tab('show');
+        }
+
+        function VerDocumento() {
+            $.ajax({
+                url: '/api/FolhaAjuste/Atestado/' + id_solicitacao,
+                type: 'GET',
+                success: function (response) {
+                    if (response) {
+                        var blob = new Blob([base64ToArrayBuffer(response)], { type: 'application/pdf' });
+                        var url = URL.createObjectURL(blob);
+
+                        alert("Documento gerado com sucesso!");
+
+                        window.open(url, '_blank');
+                    } else {
+                        alert("Nenhum documento encontrado.");
+                    }
+                },
+                error: function () {
+                    alert("Erro ao carregar o documento.");
+                }
+            });
+        }
+
+        function base64ToArrayBuffer(base64) {
+            var binaryString = window.atob(base64);
+            var len = binaryString.length;
+            var bytes = new Uint8Array(len);
+            for (var i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
         }
 
 
@@ -201,6 +246,16 @@
             $('#St_Ajuste').val(id_st_ajuste);
             $('#Ds_Causa').val(ds_causa);
             $('#Replica_Adm').val(replica_adm);
+
+            id_solicitacao = id;
+
+            $.ajax({
+                url: '/api/FolhaAjuste/Atestado_NmDocumento/' + id,
+                type: 'GET',
+                success: function (response) {
+                    document.getElementById('lbldoc').textContent = response;
+                }
+            });
 
             $('#cadastro-tab').tab('show');
         }

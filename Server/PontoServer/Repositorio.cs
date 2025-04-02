@@ -114,6 +114,30 @@ namespace PontoServer
             }
         }
 
+        public DataTable GetByParametrosInt(String tabela, int id, string nomeCampo, string valorCampo)
+        {
+            using (var conn = _dbConnection.GetConnection())
+            {
+                string sql = $"SELECT * FROM \"{tabela}\" WHERE 1 = 1 ";
+                if (id > 0)
+                    sql += $" AND id = {id}";
+                if (nomeCampo != null && nomeCampo != "" && valorCampo != null && valorCampo != "")
+                    sql += $" AND {nomeCampo} = {valorCampo}";
+
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        return dataTable;
+                    }
+                }
+            }
+        }
+
+
         public DataTable GetFolha(int? id, int? id_funcionario, string data_inicio, string data_fim)
         {
             using (var conn = _dbConnection.GetConnection())
@@ -301,6 +325,37 @@ namespace PontoServer
                 catch (Exception ex)
                 {
                     return (new Resultado { Mensagem = "Houve um erro: " + ex.Message, Sucesso = false });
+                }
+            }
+        }
+
+        public int ProximoIDSolicitacao()
+        {
+            using (var conn = _dbConnection.GetConnection())
+            {
+                try
+                {
+                    conn.Open();
+                    //using (var cmd = new NpgsqlCommand($"SELECT last_value + 1 FROM sq_id_solicitacao_ajuste;", conn))
+                    using (var cmd = new NpgsqlCommand($"SELECT nextval('sq_id_solicitacao_ajuste');", conn))
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int id = reader.GetInt32(0);
+                                return id;
+                            }
+                            else
+                            {
+                                return 0;
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return 0;
                 }
             }
         }

@@ -60,6 +60,10 @@ app.MapControllerRoute(
     pattern: "api/{controller=Folha}/{action=PesquisarFolha}/{id?}/{id_funcionario?}/{data_inicio?}/{data_fim?}");
 
 app.MapControllerRoute(
+    name: "espelhoPonto",
+    pattern: "api/{controller=Folha}/{action=EspelhoPonto}/{id?}");
+
+app.MapControllerRoute(
     name: "usuariofuncionario",
     pattern: "api/{controller=UsuarioFuncionario}/{action=UsuarioFuncionario}/{id?}"
     );

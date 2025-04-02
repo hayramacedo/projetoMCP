@@ -47,6 +47,57 @@ namespace Ponto.Controllers
             return View("/Views/Solicitacao/SolicitacaoAjuste.cshtml", model);
         }
 
+        [HttpGet]
+        [Route("api/FolhaAjuste/Atestado_NmDocumento/{id_solicitacao}")]
+        public async Task<string> PesquisarNmDocumento(int id_solicitacao = 0)
+        {
+            var rota = _routes.rota_atestado + id_solicitacao.ToString();
+            var response = await client.GetAsync(rota);
+
+            var result = await response.Content.ReadAsStringAsync();
+            var response2 = JsonConvert.DeserializeObject<AtestadoResponse>(result);
+
+            if (response2.Sucesso == false)
+            {
+                ViewBag.ErrorMessage = "Ocorreu um erro: " + response2.Mensagem;
+                ViewBag.BancoSaldo = "";
+            }
+
+            var nm_documento = "";
+            if (response2.Atestado != null)
+            {
+                nm_documento = response2.Atestado.Nm_Documento;
+            }
+
+            return nm_documento;
+        }
+
+        [HttpGet]
+        [Route("api/FolhaAjuste/Atestado/{id_solicitacao}")]
+        public async Task<byte[]> PesquisarAtestado(int id_solicitacao = 0)
+        {
+            var rota = _routes.rota_atestado + id_solicitacao.ToString();
+            var response = await client.GetAsync(rota);
+
+            var result = await response.Content.ReadAsStringAsync();
+            var response2 = JsonConvert.DeserializeObject<AtestadoResponse>(result);
+
+            if (response2.Sucesso == false)
+            {
+                ViewBag.ErrorMessage = "Ocorreu um erro: " + response2.Mensagem;
+                ViewBag.BancoSaldo = "";
+            }
+
+            byte[] atestado_base64 = {};
+            if (response2.Atestado != null)
+            {
+                atestado_base64 = response2.Atestado.Documento;
+            }
+
+            return atestado_base64;
+        }
+
+
         public async Task<IActionResult> FolhaAjuste()
         {
             // Calculo data de início e fim do mês atual
@@ -229,6 +280,13 @@ namespace Ponto.Controllers
         public class ApiResponseLista
         {
             public List<Folha> Folhas { get; set; }
+            public string Mensagem { get; set; }
+            public bool Sucesso { get; set; }
+        }
+
+        public class AtestadoResponse
+        {
+            public Atestado Atestado { get; set; }
             public string Mensagem { get; set; }
             public bool Sucesso { get; set; }
         }

@@ -41,7 +41,8 @@ namespace PontoServer.Controllers
                         Dh_Inclusao = (DateTime)row["Dh_Inclusao"],
                         Dt_Admissao = (DateTime)row["Dt_Admissao"],
                         Id_Escala = Int32.Parse(row["Id_Escala"].ToString()),
-                        Dt_Inic_BancoH = (DateTime)row["Dt_Inic_BancoH"]
+                        Dt_Inic_BancoH = (DateTime)row["Dt_Inic_BancoH"],
+                        Pis = row["Pis"].ToString()
                     };
 
                     funcionarios.Add(funcionario);
@@ -84,7 +85,8 @@ namespace PontoServer.Controllers
                                 Dh_Inclusao = (DateTime)row["Dh_Inclusao"],
                                 Dt_Admissao = (DateTime)row["Dt_Admissao"],
                                 Id_Escala = Int32.Parse(row["Id_Escala"].ToString()),
-                                Dt_Inic_BancoH = (DateTime)row["Dt_Inic_BancoH"]
+                                Dt_Inic_BancoH = (DateTime)row["Dt_Inic_BancoH"],
+                                Pis = row["Pis"].ToString()
                             };
 
                             funcionarios.Add(funcionario);
@@ -136,7 +138,8 @@ namespace PontoServer.Controllers
                                 Dh_Inclusao = (DateTime)row["Dh_Inclusao"],
                                 Dt_Admissao = (DateTime)row["Dt_Admissao"],
                                 Id_Escala = Int32.Parse(row["Id_Escala"].ToString()),
-                                Dt_Inic_BancoH = (DateTime)row["Dt_Inic_BancoH"]
+                                Dt_Inic_BancoH = (DateTime)row["Dt_Inic_BancoH"],
+                                Pis = row["Pis"].ToString()
                             };
 
                             funcionarios.Add(funcionario);
@@ -177,7 +180,8 @@ namespace PontoServer.Controllers
                     { "@matricula", funcionario.Matricula },
                     { "@dt_admissao", funcionario.Dt_Admissao },
                     { "@id_escala", funcionario.Id_Escala },
-                    { "@dt_inic_bancoh", funcionario.Dt_Inic_BancoH }
+                    { "@dt_inic_bancoh", funcionario.Dt_Inic_BancoH },
+                    { "@pis", funcionario.Pis }
                 };
 
                 var resultado = repositorio.UpdateRegistro("FUNCIONARIO", camposValores, id);

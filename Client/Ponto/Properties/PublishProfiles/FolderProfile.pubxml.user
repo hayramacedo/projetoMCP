@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>D:\Projetos\Deploy\ponto</_PublishTargetUrl>
-    <History>True|2025-03-05T20:43:04.4533291Z||;True|2025-03-05T17:42:47.6182484-03:00||;True|2025-03-05T16:46:38.7567266-03:00||;True|2025-03-05T16:46:25.1891719-03:00||;True|2025-03-05T12:45:15.4555439-03:00||;</History>
+    <History>True|2025-03-31T22:49:14.2608448Z||;True|2025-03-31T19:48:10.3299401-03:00||;True|2025-03-27T15:13:54.4228360-03:00||;True|2025-03-05T17:43:04.4533291-03:00||;True|2025-03-05T17:42:47.6182484-03:00||;True|2025-03-05T16:46:38.7567266-03:00||;True|2025-03-05T16:46:25.1891719-03:00||;True|2025-03-05T12:45:15.4555439-03:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>

@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
 using Ponto.Models;
 using Ponto.Views.Cadastro.Cargo;
+using Ponto.Views.Folha;
 using Ponto.Views.Home;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace Ponto.Controllers
@@ -60,7 +63,7 @@ namespace Ponto.Controllers
 
                 var model = new FolhaModel
                 {
-                    Folhas = apiResponse3.Folhas ?? new List<Folha>(), // Garantir que a lista seja inicializada
+                    Folhas = apiResponse3.Folhas ?? new List<Folha>(), 
                     Solicitacoes = Solicitacoes.Solicitacoes ?? new List<SolicitacaoAjuste>()
                 };
                
@@ -100,13 +103,13 @@ namespace Ponto.Controllers
                     return View("/Views/Home/Folha.cshtml", new FolhaModel { Folhas = new List<Folha>() });
                 }
 
-                var response3 = await client.GetAsync(_routes.rota_solicitacao);
+                var response3 = await client.GetAsync(_routes.rota_solicitacao + "0/" + id_funcionario.ToString() + "/0");
                 var result3 = await response3.Content.ReadAsStringAsync();
                 var Solicitacoes = JsonConvert.DeserializeObject<ListaSolicitacaoAjusteResponse>(result3);
 
                 var model = new FolhaModel
                 {
-                    Folhas = response2.Folhas ?? new List<Folha>(), // Garantir que a lista seja inicializada
+                    Folhas = response2.Folhas ?? new List<Folha>(), 
                     Solicitacoes = Solicitacoes.Solicitacoes ?? new List<SolicitacaoAjuste>()
                 };
 
@@ -116,8 +119,14 @@ namespace Ponto.Controllers
                 DateTime now = DateTime.Now;
                 DateTime firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
                 DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-                ViewBag.DataInicio = firstDayOfMonth.ToString("yyyy-MM-dd");
-                ViewBag.DataFim = lastDayOfMonth.ToString("yyyy-MM-dd");
+
+                if (data_inicio != null)
+                    ViewBag.DataInicio = data_inicio;
+                else ViewBag.DataInicio = firstDayOfMonth.ToString("yyyy-MM-dd");
+
+                if (data_fim != null) 
+                    ViewBag.DataFim = data_fim;
+                else ViewBag.DataFim = lastDayOfMonth.ToString("yyyy-MM-dd");
 
                 PesquisarSaldoBanco(id_funcionario);
                 await PesquisarFolhaAjuste(0, id_funcionario, 0);
@@ -143,7 +152,7 @@ namespace Ponto.Controllers
 
             if (response2.Sucesso == false || response2.Solicitacoes == null)
             {
-                ViewBag.ErrorMessage = "Registro não encontrado ou ID inválido.";
+                //ViewBag.ErrorMessage = "Registro não encontrado ou ID inválido.";
                 return null;
             }
 
@@ -195,8 +204,15 @@ namespace Ponto.Controllers
 
         [HttpPost]
         [Route("api/FolhaAjuste/Create")]
-        public async Task<IActionResult> Create([FromBody] SolicitacaoAjuste model)
+        //public async Task<IActionResult> Create([FromBody] SolicitacaoAjuste model)
+        public async Task<IActionResult> Create([FromForm] SolicitacaoAjuste model, [FromForm] byte[] documento, [FromForm] string nm_documento)
         {
+            var responseID = await client.GetAsync(_routes.rota_solicitacao_proximoID);
+            var resultID = await responseID.Content.ReadAsStringAsync();
+            var apiResponseID = JsonConvert.DeserializeObject<int>(resultID);
+
+            model.Id = apiResponseID;
+
             var json = JsonConvert.SerializeObject(model);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -204,6 +220,24 @@ namespace Ponto.Controllers
             var result = await response.Content.ReadAsStringAsync();
             var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(result);
 
+            if (documento != null && documento.Length > 0)
+            {
+                Atestado atestado = new Atestado
+                {
+                    Documento = documento,
+                    Id_Funcionario = model.Id_Funcionario,
+                    Id_Folha = model.Id_Folha,         
+                    Nm_Documento = nm_documento,
+                    Id_Solicitacao = apiResponseID
+                };
+
+                var json2 = JsonConvert.SerializeObject(atestado);
+                var content2 = new StringContent(json2, Encoding.UTF8, "application/json");
+
+                var response3 = await client.PostAsync(_routes.rota_atestado, content2);
+                var result3 = await response3.Content.ReadAsStringAsync();
+                var apiResponse3 = JsonConvert.DeserializeObject<ApiResponse>(result3);
+            }
             if (apiResponse.Sucesso)
             {
                 var response2 = await client.GetAsync(_routes.rota_solicitacao);
@@ -226,6 +260,31 @@ namespace Ponto.Controllers
         }
 
         [HttpGet]
+        [Route("api/Folha/Atestado/{id_solicitacao}")]
+        public async Task<string> PesquisarAtestado(int id_solicitacao = 0)
+        {
+            var rota = _routes.rota_atestado + id_solicitacao.ToString();
+            var response = await client.GetAsync(rota);
+
+            var result = await response.Content.ReadAsStringAsync();
+            var response2 = JsonConvert.DeserializeObject<AtestadoResponse>(result);
+
+            if (response2.Sucesso == false)
+            {
+                ViewBag.ErrorMessage = "Ocorreu um erro: " + response2.Mensagem;
+                ViewBag.BancoSaldo = "";
+            }
+
+            var nm_documento = "";
+            if (response2.Atestado != null)
+            {
+                nm_documento = response2.Atestado.Nm_Documento;
+            }
+
+            return nm_documento;
+        }
+
+        [HttpGet]
         [Route("api/Folha/BancoHoras_Saldo/{id_funcionario}")]
         public async void PesquisarSaldoBanco(int id_funcionario = 0)
         {
@@ -243,6 +302,67 @@ namespace Ponto.Controllers
             ViewBag.BancoSaldo = ConvertMinutesToHHMM(response2.Saldo);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EspelhoPonto(DateTime dt_inic, DateTime dt_fim)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var response = await client.GetAsync(_routes.rota_usuario_nickname + User.Identity.Name);
+                var result = await response.Content.ReadAsStringAsync();
+                var apiResponse = JsonConvert.DeserializeObject<ApiResponseUsu>(result);
+
+                var response2 = await client.GetAsync(_routes.rota_funcionariobyUsu + apiResponse.Usuario.Id);
+                var result2 = await response2.Content.ReadAsStringAsync();
+                var apiResponse2 = JsonConvert.DeserializeObject<ApiResponseFunc>(result2);
+
+                // Calculo data de início e fim do mês atual
+                ViewBag.DataInicio = dt_inic.ToString("dd/MM/yyyy");
+                ViewBag.DataFim = dt_fim.ToString("dd/MM/yyyy");
+
+                var rota = _routes.rota_folha + "0/" + apiResponse2.Funcionarios[0].Id.ToString() + "/" + dt_inic.ToString("yyyy-MM-dd") + "/" + dt_fim.ToString("yyyy-MM-dd");
+
+                ViewBag.Id_Funcionario = apiResponse2.Funcionarios[0].Id;
+
+                PesquisarSaldoBanco(apiResponse2.Funcionarios[0].Id);
+
+                var response3 = await client.GetAsync(rota);
+                var result3 = await response3.Content.ReadAsStringAsync();
+                var apiResponse3 = JsonConvert.DeserializeObject<ApiResponseLista>(result3);
+
+
+                if (apiResponse3.Sucesso == false || apiResponse3.Folhas == null)
+                {
+                    ViewBag.ErrorMessage = "Registro não encontrado ou ID inválido.";
+                    return View("/Views/Home/Folha.cshtml", new FolhaModel { Folhas = new List<Folha>() });
+                }
+
+                var response4 = await client.GetAsync(_routes.rota_empresa + apiResponse2.Funcionarios[0].Id_Empresa);
+                var result4 = await response4.Content.ReadAsStringAsync();
+                var Empresas = JsonConvert.DeserializeObject<ListaEmpresaResponse>(result4);
+
+                var response5 = await client.GetAsync(_routes.rota_cargo + apiResponse2.Funcionarios[0].Id_Cargo);
+                var result5 = await response5.Content.ReadAsStringAsync();
+                var Cargo = JsonConvert.DeserializeObject<ListaCargoResponse>(result5);
+
+                apiResponse2.Funcionarios[0].Cargo = Cargo.Cargos[0].Descricao;
+
+                var model = new RelEspelhoPontoModel
+                {
+                    Folhas = apiResponse3.Folhas ?? new List<Folha>(), 
+                    Empresa = Empresas.Empresas[0],
+                    Funcionario = apiResponse2.Funcionarios[0]
+                };
+
+                ViewData["Title"] = "Espelho de Ponto";
+
+                ViewBag.Username = User.Identity.Name;
+
+                return View("/Views/Folha/RelEspelhoPonto.cshtml", model);
+            }
+            return View("/Views/Folha/RelEspelhoPonto.cshtml");
+        }
+
+
         public string ConvertMinutesToHHMM(int minutes)
         {
             bool isNegative = minutes < 0;
@@ -258,10 +378,15 @@ namespace Ponto.Controllers
             return hhmm;
         }
 
-
-
         public class ApiResponse
         {
+            public string Mensagem { get; set; }
+            public bool Sucesso { get; set; }
+        }
+
+        public class AtestadoResponse
+        {
+            public Atestado Atestado { get; set; }
             public string Mensagem { get; set; }
             public bool Sucesso { get; set; }
         }
@@ -296,6 +421,19 @@ namespace Ponto.Controllers
         public class SaldoBancoH
         {
             public int Saldo { get; set; }
+            public string Mensagem { get; set; }
+            public bool Sucesso { get; set; }
+        }
+
+        public class ListaEmpresaResponse
+        {
+            public List<Empresa> Empresas { get; set; }
+            public string Mensagem { get; set; }
+            public bool Sucesso { get; set; }
+        }
+        public class ListaCargoResponse
+        {
+            public List<Cargo> Cargos { get; set; }
             public string Mensagem { get; set; }
             public bool Sucesso { get; set; }
         }

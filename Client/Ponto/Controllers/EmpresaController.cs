@@ -182,7 +182,6 @@ namespace Ponto.Controllers
             }
         }
 
-
         public class ApiResponse
         {
             public Empresa Empresa { get; set; }

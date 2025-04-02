@@ -23,6 +23,7 @@ namespace PontoServer.Models
         public DateTime? Dt_Admissao { get; set; }
         public int Id_Escala { get; set; }
         public DateTime? Dt_Inic_BancoH { get; set; }
+        public string Pis { get; set; }
 
     }
 }

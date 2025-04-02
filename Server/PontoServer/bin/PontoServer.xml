@@ -571,12 +571,12 @@
             Traz o Ajuste referente aos parâmetros de entrada
             </summary>
         </member>
-        <member name="M:PontoServer.Controllers.SolicitacaoAjusteController.Post(PontoServer.Models.SolicitcaoAjuste)">
+        <member name="M:PontoServer.Controllers.SolicitacaoAjusteController.Post(PontoServer.Models.SolicitacaoAjuste)">
             <summary>
             Inserir Ajuste
             </summary>
         </member>
-        <member name="M:PontoServer.Controllers.SolicitacaoAjusteController.Put(System.Int32,PontoServer.Models.SolicitcaoAjuste)">
+        <member name="M:PontoServer.Controllers.SolicitacaoAjusteController.Put(System.Int32,PontoServer.Models.SolicitacaoAjuste)">
             <summary>
             Atualizar Ajuste
             </summary>
@@ -584,6 +584,11 @@
         <member name="M:PontoServer.Controllers.SolicitacaoAjusteController.Delete(System.Int32)">
             <summary>
             Deletar Ajuste
+            </summary>
+        </member>
+        <member name="M:PontoServer.Controllers.SolicitacaoAjusteController.GetProximoID">
+            <summary>
+            Traz próximo id da tabela Solicitacao_Ajuste
             </summary>
         </member>
         <member name="M:PontoServer.Controllers.FolhaController.Get(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String)">
@@ -614,6 +619,11 @@
         <member name="M:PontoServer.Controllers.FolhaController.GetSaldo(System.Int32)">
             <summary>
             Traz Saldo do Banco de Horas referente ao Funcionário
+            </summary>
+        </member>
+        <member name="M:PontoServer.Controllers.FolhaController.Post(PontoServer.Models.Atestado)">
+            <summary>
+            Inserir Atestado
             </summary>
         </member>
         <member name="M:PontoServer.Controllers.FuncionarioController.Get">

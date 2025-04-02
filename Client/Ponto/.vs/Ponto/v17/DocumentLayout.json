@@ -3,16 +3,36 @@
   "WorkspaceRootPath": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\views\\folha\\folha.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:views\\folha\\folha.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\controllers\\folhacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:controllers\\folhacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\views\\folha\\folha.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:views\\folha\\folha.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\views\\solicitacao\\solicitacaoajuste.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:views\\solicitacao\\solicitacaoajuste.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\controllers\\solicitacaocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:controllers\\solicitacaocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|d:\\projetos\\desenvolvimento\\web\\ponto\\client\\ponto\\views\\solicitacao\\solicitacaoajuste.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{20FA3D50-DA5E-4A57-8EB7-7A708C413A07}|Ponto.csproj|solutionrelative:views\\solicitacao\\solicitacaoajuste.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,19 +42,84 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAAACIAAAAYAAAAAAAAAA==",
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAADQAAABrAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-27T15:20:52.849Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "SolicitacaoAjuste.cshtml.cs",
+              "DocumentMoniker": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Views\\Solicitacao\\SolicitacaoAjuste.cshtml.cs",
+              "RelativeDocumentMoniker": "Views\\Solicitacao\\SolicitacaoAjuste.cshtml.cs",
+              "ToolTip": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Views\\Solicitacao\\SolicitacaoAjuste.cshtml.cs",
+              "RelativeToolTip": "Views\\Solicitacao\\SolicitacaoAjuste.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-05T20:54:05.509Z",
+              "WhenOpened": "2025-03-27T13:54:50.524Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SolicitacaoController.cs",
+              "DocumentMoniker": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Controllers\\SolicitacaoController.cs",
+              "RelativeDocumentMoniker": "Controllers\\SolicitacaoController.cs",
+              "ToolTip": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Controllers\\SolicitacaoController.cs",
+              "RelativeToolTip": "Controllers\\SolicitacaoController.cs",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAowE4AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-27T13:51:26.857Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SolicitacaoAjuste.cshtml",
+              "DocumentMoniker": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Views\\Solicitacao\\SolicitacaoAjuste.cshtml",
+              "RelativeDocumentMoniker": "Views\\Solicitacao\\SolicitacaoAjuste.cshtml",
+              "ToolTip": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Views\\Solicitacao\\SolicitacaoAjuste.cshtml",
+              "RelativeToolTip": "Views\\Solicitacao\\SolicitacaoAjuste.cshtml",
+              "ViewState": "AgIAAKIAAAAAAAAAAAAkwKoAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-27T13:46:43.906Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAABfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-03-19T22:15:00.802Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-03-19T19:37:18.209Z",
               "EditorCaption": ""
             },
             {
@@ -45,20 +130,20 @@
               "RelativeDocumentMoniker": "Controllers\\FolhaController.cs",
               "ToolTip": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Controllers\\FolhaController.cs",
               "RelativeToolTip": "Controllers\\FolhaController.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAAA8AAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAANAAAAAAAAAAAAAAwN0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-02T23:14:50.194Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "Folha.cshtml",
               "DocumentMoniker": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Views\\Folha\\Folha.cshtml",
               "RelativeDocumentMoniker": "Views\\Folha\\Folha.cshtml",
               "ToolTip": "D:\\Projetos\\Desenvolvimento\\Web\\Ponto\\Client\\Ponto\\Views\\Folha\\Folha.cshtml",
               "RelativeToolTip": "Views\\Folha\\Folha.cshtml",
-              "ViewState": "AgIAAA8BAAAAAAAAAAAAABMBAAAtAAAAAAAAAA==",
+              "ViewState": "AgIAAKcBAAAAAAAAAAAkwMIBAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-03-02T22:53:54.819Z",
               "EditorCaption": ""
